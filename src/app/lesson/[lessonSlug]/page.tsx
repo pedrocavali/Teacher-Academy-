@@ -6,6 +6,18 @@ import { createClient } from "@/lib/supabase/server";
 import { ensureLessonStarted } from "@/lib/lesson/progress";
 import { ContentCore, type RenderableContentItem } from "@/components/lesson/content-core";
 import { CompleteLessonButton } from "@/components/lesson/complete-lesson-button";
+import {
+  ActivityPlayer,
+  type PlayableActivity,
+  type PlayableQuestion,
+} from "@/components/activity/activity-player";
+
+const PLAYABLE_QUESTION_TYPES = new Set([
+  "multiple_choice",
+  "true_false",
+  "fill_blank",
+  "ordering",
+]);
 
 type RawContentItem = {
   id: string;
@@ -91,6 +103,41 @@ export default async function LessonPage(
     .map((item) => toRenderableItem(supabase, item))
     .filter((item): item is RenderableContentItem => item !== null);
 
+  // Deliberately never selects is_correct or feedback — those only get
+  // read server-side, inside submitActivityAttempt, after the learner
+  // submits. See src/lib/activity/submit-attempt.ts.
+  const { data: activities } = await supabase
+    .from("activities")
+    .select(
+      "id, type, skill, instructions, order_index, questions(id, prompt, type, order_index, question_options(id, text, order_index))",
+    )
+    .eq("lesson_id", lesson.id)
+    .eq("status", "published")
+    .order("order_index", { ascending: true });
+
+  const playableActivities: PlayableActivity[] = (activities ?? []).map((activity) => {
+    const questions = (activity.questions ?? [])
+      .filter((q) => PLAYABLE_QUESTION_TYPES.has(q.type))
+      .sort((a, b) => a.order_index - b.order_index)
+      .map((q): PlayableQuestion => ({
+        id: q.id,
+        prompt: q.prompt,
+        type: q.type as PlayableQuestion["type"],
+        options: (q.question_options ?? [])
+          .slice()
+          .sort((a, b) => a.order_index - b.order_index)
+          .map((o) => ({ id: o.id, text: o.text })),
+      }));
+
+    return {
+      id: activity.id,
+      type: activity.type,
+      skill: activity.skill,
+      instructions: activity.instructions,
+      questions,
+    };
+  });
+
   const unit = lesson.units as unknown as { slug: string; title: string } | null;
 
   return (
@@ -115,6 +162,16 @@ export default async function LessonPage(
       </div>
 
       <ContentCore items={renderableItems} />
+
+      {playableActivities.length > 0 && (
+        <div className="flex flex-col gap-6">
+          {playableActivities
+            .filter((activity) => activity.questions.length > 0)
+            .map((activity) => (
+              <ActivityPlayer key={activity.id} activity={activity} />
+            ))}
+        </div>
+      )}
 
       <CompleteLessonButton
         lessonId={lesson.id}

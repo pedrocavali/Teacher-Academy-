@@ -1,6 +1,6 @@
 "use client";
 
-import { useActionState } from "react";
+import { useActionState, useState } from "react";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { FormMessage } from "@/components/ui/form-message";
@@ -27,6 +27,7 @@ export function ActivityEditForm({
     updateActivity.bind(null, activityId),
     initialState,
   );
+  const [type, setType] = useState(activity.type);
 
   return (
     <form action={formAction} className="flex w-full max-w-lg flex-col gap-4">
@@ -37,12 +38,13 @@ export function ActivityEditForm({
             id="type"
             name="type"
             required
-            defaultValue={activity.type}
+            value={type}
+            onChange={(e) => setType(e.target.value)}
             className="w-full rounded-md border border-border bg-background px-3 py-2 text-sm capitalize focus:outline-none focus:ring-2 focus:ring-primary"
           >
-            {ACTIVITY_TYPES.map((type) => (
-              <option key={type} value={type} className="capitalize">
-                {type.replace("_", " ")}
+            {ACTIVITY_TYPES.map((activityType) => (
+              <option key={activityType} value={activityType} className="capitalize">
+                {activityType.replace("_", " ")}
               </option>
             ))}
           </select>
@@ -67,7 +69,9 @@ export function ActivityEditForm({
       </div>
 
       <div className="flex flex-col gap-1">
-        <Label htmlFor="instructions">Instructions</Label>
+        <Label htmlFor="instructions">
+          {type === "writing" ? "Writing prompt" : "Instructions"}
+        </Label>
         <textarea
           id="instructions"
           name="instructions"
@@ -75,6 +79,12 @@ export function ActivityEditForm({
           defaultValue={activity.instructions ?? ""}
           className="w-full rounded-md border border-border bg-background px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-primary"
         />
+        {type === "writing" && (
+          <p className="text-xs text-muted-foreground">
+            Shown to the learner as the task. AI feedback (Gemini) grades
+            what they write against this prompt.
+          </p>
+        )}
       </div>
 
       <div className="flex gap-4">

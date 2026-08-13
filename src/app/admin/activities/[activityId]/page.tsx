@@ -57,34 +57,42 @@ export default async function AdminActivityDetailPage(
         <ActivityEditForm activityId={activity.id} activity={activity} />
       </div>
 
-      <div className="flex flex-col gap-4">
-        <div className="flex items-center justify-between">
-          <h2 className="text-lg font-semibold tracking-tight">Questions</h2>
-          <Link
-            href={`/admin/questions/new?activityId=${activity.id}`}
-            className={buttonVariants({ size: "sm" })}
-          >
-            New question
-          </Link>
-        </div>
-
-        {!questions || questions.length === 0 ? (
-          <p className="text-sm text-muted-foreground">No questions yet.</p>
-        ) : (
-          <div className="flex flex-col divide-y divide-border rounded-lg border border-border">
-            {questions.map((question) => (
-              <Link
-                key={question.id}
-                href={`/admin/questions/${question.id}`}
-                className="flex items-center justify-between px-4 py-3 text-sm hover:bg-muted/50"
-              >
-                <span className="truncate">{question.prompt}</span>
-                <TypeChip>{question.type.replace("_", " ")}</TypeChip>
-              </Link>
-            ))}
+      {activity.type === "writing" ? (
+        <p className="text-sm text-muted-foreground">
+          Writing activities don&apos;t use questions — the prompt above is
+          shown directly to the learner, and Gemini grades what they write
+          against it.
+        </p>
+      ) : (
+        <div className="flex flex-col gap-4">
+          <div className="flex items-center justify-between">
+            <h2 className="text-lg font-semibold tracking-tight">Questions</h2>
+            <Link
+              href={`/admin/questions/new?activityId=${activity.id}`}
+              className={buttonVariants({ size: "sm" })}
+            >
+              New question
+            </Link>
           </div>
-        )}
-      </div>
+
+          {!questions || questions.length === 0 ? (
+            <p className="text-sm text-muted-foreground">No questions yet.</p>
+          ) : (
+            <div className="flex flex-col divide-y divide-border rounded-lg border border-border">
+              {questions.map((question) => (
+                <Link
+                  key={question.id}
+                  href={`/admin/questions/${question.id}`}
+                  className="flex items-center justify-between px-4 py-3 text-sm hover:bg-muted/50"
+                >
+                  <span className="truncate">{question.prompt}</span>
+                  <TypeChip>{question.type.replace("_", " ")}</TypeChip>
+                </Link>
+              ))}
+            </div>
+          )}
+        </div>
+      )}
     </div>
   );
 }

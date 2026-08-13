@@ -11,6 +11,7 @@ import {
   type PlayableActivity,
   type PlayableQuestion,
 } from "@/components/activity/activity-player";
+import { WritingActivity } from "@/components/writing/writing-activity";
 
 const PLAYABLE_QUESTION_TYPES = new Set([
   "multiple_choice",
@@ -115,28 +116,32 @@ export default async function LessonPage(
     .eq("status", "published")
     .order("order_index", { ascending: true });
 
-  const playableActivities: PlayableActivity[] = (activities ?? []).map((activity) => {
-    const questions = (activity.questions ?? [])
-      .filter((q) => PLAYABLE_QUESTION_TYPES.has(q.type))
-      .sort((a, b) => a.order_index - b.order_index)
-      .map((q): PlayableQuestion => ({
-        id: q.id,
-        prompt: q.prompt,
-        type: q.type as PlayableQuestion["type"],
-        options: (q.question_options ?? [])
-          .slice()
-          .sort((a, b) => a.order_index - b.order_index)
-          .map((o) => ({ id: o.id, text: o.text })),
-      }));
+  const writingActivities = (activities ?? []).filter((a) => a.type === "writing");
 
-    return {
-      id: activity.id,
-      type: activity.type,
-      skill: activity.skill,
-      instructions: activity.instructions,
-      questions,
-    };
-  });
+  const playableActivities: PlayableActivity[] = (activities ?? [])
+    .filter((a) => a.type !== "writing")
+    .map((activity) => {
+      const questions = (activity.questions ?? [])
+        .filter((q) => PLAYABLE_QUESTION_TYPES.has(q.type))
+        .sort((a, b) => a.order_index - b.order_index)
+        .map((q): PlayableQuestion => ({
+          id: q.id,
+          prompt: q.prompt,
+          type: q.type as PlayableQuestion["type"],
+          options: (q.question_options ?? [])
+            .slice()
+            .sort((a, b) => a.order_index - b.order_index)
+            .map((o) => ({ id: o.id, text: o.text })),
+        }));
+
+      return {
+        id: activity.id,
+        type: activity.type,
+        skill: activity.skill,
+        instructions: activity.instructions,
+        questions,
+      };
+    });
 
   const unit = lesson.units as unknown as { slug: string; title: string } | null;
 
@@ -170,6 +175,18 @@ export default async function LessonPage(
             .map((activity) => (
               <ActivityPlayer key={activity.id} activity={activity} />
             ))}
+        </div>
+      )}
+
+      {writingActivities.length > 0 && (
+        <div className="flex flex-col gap-6">
+          {writingActivities.map((activity) => (
+            <WritingActivity
+              key={activity.id}
+              activityId={activity.id}
+              prompt={activity.instructions}
+            />
+          ))}
         </div>
       )}
 

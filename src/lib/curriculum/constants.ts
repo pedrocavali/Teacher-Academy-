@@ -13,12 +13,12 @@ export const SKILLS = [
 ] as const;
 
 // Activity types an admin can author right now. The full public.activity_type
-// enum also has matching, speaking, writing, and role_play — left out here:
+// enum also has matching, speaking, and role_play — still left out:
 // matching needs a pair_key/match_target column the current question_options
-// schema doesn't have yet, and speaking/writing/role_play are only
-// meaningful once the AI layer (Phases 11-13) can grade or converse. Rather
-// than let an admin create a half-working activity, the CMS just doesn't
-// offer those types yet.
+// schema doesn't have yet, and speaking/role_play need Phases 12-13
+// (recording + the AI coach). "writing" was added in Phase 11 now that
+// AIService.evaluateWriting exists to grade it — before that it would have
+// been a submission into the void, same reasoning as the others.
 export const ACTIVITY_TYPES = [
   "multiple_choice",
   "true_false",
@@ -28,6 +28,7 @@ export const ACTIVITY_TYPES = [
   "listening_comprehension",
   "grammar",
   "vocabulary",
+  "writing",
 ] as const;
 
 // The actual interaction widget a question renders as. activities.type above

@@ -19,7 +19,7 @@ export async function createClient() {
             );
           } catch {
             // Called from a Server Component with no request context to write to.
-            // Session refresh for that request is handled by src/middleware.ts instead.
+            // Session refresh for that request is handled by src/proxy.ts instead.
           }
         },
       },

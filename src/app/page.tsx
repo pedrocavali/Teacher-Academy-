@@ -1,3 +1,5 @@
+import Link from "next/link";
+
 export default function Home() {
   return (
     <div className="flex flex-1 flex-col items-center justify-center bg-background px-6 py-32 text-foreground">
@@ -13,6 +15,12 @@ export default function Home() {
           reading, listening, writing, and speaking — built for short study
           sessions between classes.
         </p>
+        <Link
+          href="/signup"
+          className="mt-2 rounded-md bg-foreground px-5 py-2.5 text-sm font-medium text-background"
+        >
+          Get started
+        </Link>
       </main>
     </div>
   );

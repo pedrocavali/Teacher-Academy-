@@ -36,7 +36,25 @@ export async function updateSession(request: NextRequest) {
 
   // Refreshes the auth session so Server Components always see a valid
   // (or correctly expired) session. Do not remove — required by @supabase/ssr.
-  await supabase.auth.getUser();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+
+  const path = request.nextUrl.pathname;
+  const isProtectedRoute = path.startsWith("/dashboard");
+  const isAuthOnlyRoute = path === "/login" || path === "/signup";
+
+  if (!user && isProtectedRoute) {
+    const redirectUrl = request.nextUrl.clone();
+    redirectUrl.pathname = "/login";
+    return NextResponse.redirect(redirectUrl);
+  }
+
+  if (user && isAuthOnlyRoute) {
+    const redirectUrl = request.nextUrl.clone();
+    redirectUrl.pathname = "/dashboard";
+    return NextResponse.redirect(redirectUrl);
+  }
 
   return supabaseResponse;
 }

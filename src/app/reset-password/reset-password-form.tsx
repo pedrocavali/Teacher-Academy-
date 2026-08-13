@@ -1,6 +1,9 @@
 "use client";
 
 import { useActionState } from "react";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { FormMessage } from "@/components/ui/form-message";
 import { SubmitButton } from "@/components/auth/submit-button";
 import { resetPassword, type ResetPasswordState } from "./actions";
 
@@ -12,25 +15,18 @@ export function ResetPasswordForm() {
   return (
     <form action={formAction} className="flex w-full flex-col gap-4">
       <div className="flex flex-col gap-1">
-        <label htmlFor="password" className="text-sm font-medium">
-          New password
-        </label>
-        <input
+        <Label htmlFor="password">New password</Label>
+        <Input
           id="password"
           name="password"
           type="password"
           required
           minLength={6}
           autoComplete="new-password"
-          className="rounded-md border border-foreground/20 bg-background px-3 py-2 text-sm"
         />
       </div>
 
-      {state?.error && (
-        <p className="text-sm text-red-600" role="alert">
-          {state.error}
-        </p>
-      )}
+      {state?.error && <FormMessage variant="error">{state.error}</FormMessage>}
 
       <SubmitButton pendingLabel="Updating...">Update password</SubmitButton>
     </form>

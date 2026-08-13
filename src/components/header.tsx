@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { createClient } from "@/lib/supabase/server";
 import { signOut } from "@/lib/auth/actions";
+import { buttonVariants } from "@/components/ui/button";
 
 export async function Header() {
   // Same reasoning as src/lib/supabase/middleware.ts: don't take down every
@@ -15,7 +16,7 @@ export async function Header() {
     : null;
 
   return (
-    <header className="flex items-center justify-between border-b border-foreground/10 px-6 py-4">
+    <header className="flex items-center justify-between border-b border-border px-6 py-4">
       <Link href="/" className="text-sm font-semibold tracking-tight">
         Teacher Academy
       </Link>
@@ -36,10 +37,7 @@ export async function Header() {
           <Link href="/login" className="hover:underline">
             Sign in
           </Link>
-          <Link
-            href="/signup"
-            className="rounded-md bg-foreground px-3 py-1.5 text-background"
-          >
+          <Link href="/signup" className={buttonVariants({ size: "sm" })}>
             Sign up
           </Link>
         </div>

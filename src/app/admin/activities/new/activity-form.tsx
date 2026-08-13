@@ -13,6 +13,7 @@ const initialState: ActivityFormState = null;
 export function NewActivityForm({ lessonId }: { lessonId: string }) {
   const [state, formAction] = useActionState(createActivity, initialState);
   const [type, setType] = useState<(typeof ACTIVITY_TYPES)[number]>("multiple_choice");
+  const isPromptType = type === "writing" || type === "speaking";
 
   return (
     <form action={formAction} className="flex w-full max-w-lg flex-col gap-4">
@@ -57,7 +58,7 @@ export function NewActivityForm({ lessonId }: { lessonId: string }) {
 
       <div className="flex flex-col gap-1">
         <Label htmlFor="instructions">
-          {type === "writing" ? "Writing prompt" : "Instructions"}
+          {type === "writing" ? "Writing prompt" : type === "speaking" ? "Speaking prompt" : "Instructions"}
         </Label>
         <textarea
           id="instructions"
@@ -66,14 +67,16 @@ export function NewActivityForm({ lessonId }: { lessonId: string }) {
           placeholder={
             type === "writing"
               ? "Write a short email to a colleague explaining..."
-              : "Choose the best answer for each question."
+              : type === "speaking"
+                ? "Describe a challenge you faced in the classroom this week and how you handled it."
+                : "Choose the best answer for each question."
           }
           className="w-full rounded-md border border-border bg-background px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-primary"
         />
-        {type === "writing" && (
+        {isPromptType && (
           <p className="text-xs text-muted-foreground">
             Shown to the learner as the task. AI feedback (Gemini) grades
-            what they write against this prompt.
+            their {type} against this prompt.
           </p>
         )}
       </div>

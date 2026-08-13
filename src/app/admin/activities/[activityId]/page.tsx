@@ -57,11 +57,11 @@ export default async function AdminActivityDetailPage(
         <ActivityEditForm activityId={activity.id} activity={activity} />
       </div>
 
-      {activity.type === "writing" ? (
+      {activity.type === "writing" || activity.type === "speaking" ? (
         <p className="text-sm text-muted-foreground">
-          Writing activities don&apos;t use questions — the prompt above is
-          shown directly to the learner, and Gemini grades what they write
-          against it.
+          {activity.type === "writing" ? "Writing" : "Speaking"} activities
+          don&apos;t use questions — the prompt above is shown directly to
+          the learner, and Gemini grades their {activity.type} against it.
         </p>
       ) : (
         <div className="flex flex-col gap-4">

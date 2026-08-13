@@ -12,6 +12,7 @@ import {
   type PlayableQuestion,
 } from "@/components/activity/activity-player";
 import { WritingActivity } from "@/components/writing/writing-activity";
+import { SpeakingActivity } from "@/components/speaking/speaking-activity";
 
 const PLAYABLE_QUESTION_TYPES = new Set([
   "multiple_choice",
@@ -117,9 +118,10 @@ export default async function LessonPage(
     .order("order_index", { ascending: true });
 
   const writingActivities = (activities ?? []).filter((a) => a.type === "writing");
+  const speakingActivities = (activities ?? []).filter((a) => a.type === "speaking");
 
   const playableActivities: PlayableActivity[] = (activities ?? [])
-    .filter((a) => a.type !== "writing")
+    .filter((a) => a.type !== "writing" && a.type !== "speaking")
     .map((activity) => {
       const questions = (activity.questions ?? [])
         .filter((q) => PLAYABLE_QUESTION_TYPES.has(q.type))
@@ -184,6 +186,19 @@ export default async function LessonPage(
             <WritingActivity
               key={activity.id}
               activityId={activity.id}
+              prompt={activity.instructions}
+            />
+          ))}
+        </div>
+      )}
+
+      {speakingActivities.length > 0 && (
+        <div className="flex flex-col gap-6">
+          {speakingActivities.map((activity) => (
+            <SpeakingActivity
+              key={activity.id}
+              activityId={activity.id}
+              userId={user.id}
               prompt={activity.instructions}
             />
           ))}

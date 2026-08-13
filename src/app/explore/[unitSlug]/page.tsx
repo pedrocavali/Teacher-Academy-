@@ -35,7 +35,7 @@ export default async function UnitDetailPage(
 
   const { data: lessons } = await supabase
     .from("lessons")
-    .select("id, title, objective, cefr_level, primary_skill, estimated_minutes")
+    .select("id, slug, title, objective, cefr_level, primary_skill, estimated_minutes")
     .eq("unit_id", unit.id)
     .eq("status", "published")
     .order("order_index", { ascending: true });

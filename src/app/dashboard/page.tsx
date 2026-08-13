@@ -29,6 +29,14 @@ export default async function DashboardPage() {
     .eq("id", user.id)
     .single();
 
+  const { data: placement } = await supabase
+    .from("assessment_results")
+    .select("overall_level")
+    .eq("user_id", user.id)
+    .order("created_at", { ascending: false })
+    .limit(1)
+    .maybeSingle();
+
   return (
     <div className="flex flex-1 flex-col items-center px-6 py-24">
       <Card className="flex w-full max-w-sm flex-col gap-6">
@@ -42,14 +50,33 @@ export default async function DashboardPage() {
           </p>
         </div>
 
-        <p className="text-sm text-muted-foreground">
-          Placement and recommended practice land here in a later phase. For
-          now, browse the catalog directly.
-        </p>
+        {placement ? (
+          <p className="text-sm text-muted-foreground">
+            Your level: <span className="font-medium text-foreground">{placement.overall_level}</span>
+          </p>
+        ) : (
+          <p className="text-sm text-muted-foreground">
+            Take the placement diagnostic to get a starting estimate of your
+            level.
+          </p>
+        )}
 
-        <Link href="/explore" className={buttonVariants({ size: "lg" })}>
-          Explore
-        </Link>
+        <div className="flex flex-col gap-2">
+          {!placement && (
+            <Link href="/placement" className={buttonVariants({ size: "lg" })}>
+              Take placement
+            </Link>
+          )}
+          <Link
+            href="/explore"
+            className={buttonVariants({
+              size: "lg",
+              variant: placement ? "primary" : "secondary",
+            })}
+          >
+            Explore
+          </Link>
+        </div>
 
         <form action={signOut}>
           <SubmitButton pendingLabel="Signing out...">Sign out</SubmitButton>

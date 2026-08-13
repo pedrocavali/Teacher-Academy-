@@ -16,6 +16,9 @@ export default async function AdminLayout({
           <Link href="/admin/courses" className="hover:underline">
             Courses
           </Link>
+          <Link href="/admin/assessments" className="hover:underline">
+            Assessments
+          </Link>
           <Link href="/dashboard" className="ml-auto text-muted-foreground hover:underline">
             Back to app
           </Link>

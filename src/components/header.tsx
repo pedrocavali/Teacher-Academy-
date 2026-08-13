@@ -11,9 +11,25 @@ export async function Header() {
     !!process.env.NEXT_PUBLIC_SUPABASE_URL &&
     !!process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
 
-  const user = isSupabaseConfigured
-    ? (await (await createClient()).auth.getUser()).data.user
-    : null;
+  let user = null;
+  let isAdmin = false;
+
+  if (isSupabaseConfigured) {
+    const supabase = await createClient();
+    const {
+      data: { user: authUser },
+    } = await supabase.auth.getUser();
+    user = authUser;
+
+    if (user) {
+      const { data: profile } = await supabase
+        .from("profiles")
+        .select("role")
+        .eq("id", user.id)
+        .single();
+      isAdmin = profile?.role === "admin";
+    }
+  }
 
   return (
     <header className="flex items-center justify-between border-b border-border px-6 py-4">
@@ -23,6 +39,11 @@ export async function Header() {
 
       {user ? (
         <div className="flex items-center gap-4 text-sm">
+          {isAdmin && (
+            <Link href="/admin/courses" className="hover:underline">
+              Admin
+            </Link>
+          )}
           <Link href="/dashboard" className="hover:underline">
             Dashboard
           </Link>

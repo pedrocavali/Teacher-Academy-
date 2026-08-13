@@ -1,9 +1,11 @@
 import type { Metadata } from "next";
+import Link from "next/link";
 import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
 import { signOut } from "@/lib/auth/actions";
 import { SubmitButton } from "@/components/auth/submit-button";
 import { Card } from "@/components/ui/card";
+import { buttonVariants } from "@/components/ui/button";
 
 export const metadata: Metadata = {
   title: "Dashboard — Teacher Academy",
@@ -41,9 +43,13 @@ export default async function DashboardPage() {
         </div>
 
         <p className="text-sm text-muted-foreground">
-          Placement, your catalog, and recommended practice land here in a
-          later phase. For now this page just confirms you&apos;re signed in.
+          Placement and recommended practice land here in a later phase. For
+          now, browse the catalog directly.
         </p>
+
+        <Link href="/explore" className={buttonVariants({ size: "lg" })}>
+          Explore
+        </Link>
 
         <form action={signOut}>
           <SubmitButton pendingLabel="Signing out...">Sign out</SubmitButton>

@@ -47,6 +47,9 @@ export async function Header() {
           <Link href="/dashboard" className="hover:underline">
             Dashboard
           </Link>
+          <Link href="/explore" className="hover:underline">
+            Explore
+          </Link>
           <form action={signOut}>
             <button type="submit" className="hover:underline">
               Sign out

@@ -1,5 +1,11 @@
 import { GoogleGenAI, Type } from "@google/genai";
-import type { AIProvider, SpeakingFeedback, WritingFeedback } from "@/lib/ai/provider";
+import type {
+  AIProvider,
+  CoachResponse,
+  CoachTurn,
+  SpeakingFeedback,
+  WritingFeedback,
+} from "@/lib/ai/provider";
 
 // Free-tier friendly: fast, cheap, more than capable for structured
 // feedback on a paragraph of writing. Change here only — nothing else
@@ -118,6 +124,40 @@ Speaking task: "${prompt}"
 Listen to the attached audio recording of the learner's response. First transcribe what they actually said. Then evaluate intelligibility (can you understand them), fluency (do they speak smoothly, without excessive pauses/restarts), vocabulary range, grammar accuracy, and how well the response addresses the task. Be specific and constructive, referencing what they actually said. Never respond with just "wrong" — always explain what to improve and how. If the audio has no speech (e.g. silence or noise), say so in the transcript and overall comment, and rate everything "low".`;
 }
 
+const COACH_RESPONSE_SCHEMA = {
+  type: Type.OBJECT,
+  properties: {
+    reply: {
+      type: Type.STRING,
+      description: "Your next line, in character, or the final wrap-up if isFinal is true.",
+    },
+    isFinal: { type: Type.BOOLEAN },
+  },
+  required: ["reply", "isFinal"],
+};
+
+function buildCoachSystemInstruction({
+  scenario,
+  cefrLevel,
+  isFinalTurn,
+}: {
+  scenario: string;
+  cefrLevel?: string;
+  isFinalTurn: boolean;
+}): string {
+  const base = `You are role-playing a short, realistic English conversation practice scenario with an adult learner${
+    cefrLevel ? ` at approximately CEFR level ${cefrLevel}` : ""
+  }. Play whichever character the scenario implies (a colleague, a student, a parent, etc.) — never break character to explain the exercise. Keep your lines short and natural, matched to the learner's level. Always set isFinal to false unless told this is the final turn.
+
+Scenario: "${scenario}"`;
+
+  if (!isFinalTurn) return base;
+
+  return `${base}
+
+This is the final turn. In your reply: respond in character briefly to close out the conversation naturally, then on a new line step outside the roleplay and give 2-3 encouraging, specific sentences of feedback on the vocabulary and grammar the learner used, referencing what they actually said. Set isFinal to true.`;
+}
+
 export class GeminiProvider implements AIProvider {
   private client: GoogleGenAI;
 
@@ -181,5 +221,41 @@ export class GeminiProvider implements AIProvider {
     }
 
     return JSON.parse(text) as SpeakingFeedback;
+  }
+
+  async continueCoachConversation(input: {
+    scenario: string;
+    history: CoachTurn[];
+    cefrLevel?: string;
+    isFinalTurn: boolean;
+  }): Promise<CoachResponse> {
+    const contents =
+      input.history.length > 0
+        ? input.history.map((turn) => ({
+            role: turn.role === "user" ? "user" : "model",
+            parts: [{ text: turn.content }],
+          }))
+        : // First call: no history yet — a synthetic nudge so the model has
+          // something to respond to and opens the scenario.
+          [{ role: "user", parts: [{ text: "(The learner is ready to begin.)" }] }];
+
+    const response = await this.client.models.generateContent({
+      model: MODEL,
+      contents,
+      config: {
+        systemInstruction: buildCoachSystemInstruction(input),
+        responseMimeType: "application/json",
+        responseSchema: COACH_RESPONSE_SCHEMA,
+      },
+    });
+
+    const text = response.text;
+    if (!text) {
+      throw new Error("Empty response from the AI provider.");
+    }
+
+    const parsed = JSON.parse(text) as CoachResponse;
+    // App-driven turn cap wins regardless of what the model decided.
+    return { ...parsed, isFinal: parsed.isFinal || input.isFinalTurn };
   }
 }

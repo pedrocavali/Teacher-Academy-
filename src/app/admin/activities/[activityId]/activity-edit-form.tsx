@@ -10,6 +10,12 @@ import { updateActivity, type ActivityFormState } from "./actions";
 
 const initialState: ActivityFormState = null;
 
+const PROMPT_TYPES = {
+  writing: { label: "Writing prompt" },
+  speaking: { label: "Speaking prompt" },
+  role_play: { label: "Scenario" },
+} as const;
+
 export function ActivityEditForm({
   activityId,
   activity,
@@ -28,7 +34,7 @@ export function ActivityEditForm({
     initialState,
   );
   const [type, setType] = useState(activity.type);
-  const isPromptType = type === "writing" || type === "speaking";
+  const promptType = PROMPT_TYPES[type as keyof typeof PROMPT_TYPES];
 
   return (
     <form action={formAction} className="flex w-full max-w-lg flex-col gap-4">
@@ -70,9 +76,7 @@ export function ActivityEditForm({
       </div>
 
       <div className="flex flex-col gap-1">
-        <Label htmlFor="instructions">
-          {type === "writing" ? "Writing prompt" : type === "speaking" ? "Speaking prompt" : "Instructions"}
-        </Label>
+        <Label htmlFor="instructions">{promptType?.label ?? "Instructions"}</Label>
         <textarea
           id="instructions"
           name="instructions"
@@ -80,10 +84,11 @@ export function ActivityEditForm({
           defaultValue={activity.instructions ?? ""}
           className="w-full rounded-md border border-border bg-background px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-primary"
         />
-        {isPromptType && (
+        {promptType && (
           <p className="text-xs text-muted-foreground">
-            Shown to the learner as the task. AI feedback (Gemini) grades
-            their {type} against this prompt.
+            {type === "role_play"
+              ? "The AI coach plays whichever role this scenario implies and has a short practice conversation with the learner."
+              : `Shown to the learner as the task. AI feedback (Gemini) grades their ${type} against this prompt.`}
           </p>
         )}
       </div>

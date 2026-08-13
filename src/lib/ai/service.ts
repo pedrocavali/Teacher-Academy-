@@ -1,5 +1,11 @@
 import { GeminiProvider } from "@/lib/ai/gemini-provider";
-import type { AIProvider, SpeakingFeedback, WritingFeedback } from "@/lib/ai/provider";
+import type {
+  AIProvider,
+  CoachResponse,
+  CoachTurn,
+  SpeakingFeedback,
+  WritingFeedback,
+} from "@/lib/ai/provider";
 
 // The only place that knows which provider is behind AIProvider. Callers
 // (server actions) only ever import from here, never gemini-provider.ts
@@ -35,4 +41,13 @@ export async function evaluateSpeaking(input: {
   cefrLevel?: string;
 }): Promise<SpeakingFeedback> {
   return getProvider().evaluateSpeaking(input);
+}
+
+export async function continueCoachConversation(input: {
+  scenario: string;
+  history: CoachTurn[];
+  cefrLevel?: string;
+  isFinalTurn: boolean;
+}): Promise<CoachResponse> {
+  return getProvider().continueCoachConversation(input);
 }

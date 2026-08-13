@@ -10,10 +10,25 @@ import { createActivity, type ActivityFormState } from "../actions";
 
 const initialState: ActivityFormState = null;
 
+const PROMPT_TYPES = {
+  writing: {
+    label: "Writing prompt",
+    placeholder: "Write a short email to a colleague explaining...",
+  },
+  speaking: {
+    label: "Speaking prompt",
+    placeholder: "Describe a challenge you faced in the classroom this week and how you handled it.",
+  },
+  role_play: {
+    label: "Scenario",
+    placeholder: "You're a teacher discussing a student's progress with their parent at a conference.",
+  },
+} as const;
+
 export function NewActivityForm({ lessonId }: { lessonId: string }) {
   const [state, formAction] = useActionState(createActivity, initialState);
   const [type, setType] = useState<(typeof ACTIVITY_TYPES)[number]>("multiple_choice");
-  const isPromptType = type === "writing" || type === "speaking";
+  const promptType = PROMPT_TYPES[type as keyof typeof PROMPT_TYPES];
 
   return (
     <form action={formAction} className="flex w-full max-w-lg flex-col gap-4">
@@ -57,26 +72,19 @@ export function NewActivityForm({ lessonId }: { lessonId: string }) {
       </div>
 
       <div className="flex flex-col gap-1">
-        <Label htmlFor="instructions">
-          {type === "writing" ? "Writing prompt" : type === "speaking" ? "Speaking prompt" : "Instructions"}
-        </Label>
+        <Label htmlFor="instructions">{promptType?.label ?? "Instructions"}</Label>
         <textarea
           id="instructions"
           name="instructions"
           rows={2}
-          placeholder={
-            type === "writing"
-              ? "Write a short email to a colleague explaining..."
-              : type === "speaking"
-                ? "Describe a challenge you faced in the classroom this week and how you handled it."
-                : "Choose the best answer for each question."
-          }
+          placeholder={promptType?.placeholder ?? "Choose the best answer for each question."}
           className="w-full rounded-md border border-border bg-background px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-primary"
         />
-        {isPromptType && (
+        {promptType && (
           <p className="text-xs text-muted-foreground">
-            Shown to the learner as the task. AI feedback (Gemini) grades
-            their {type} against this prompt.
+            {type === "role_play"
+              ? "The AI coach plays whichever role this scenario implies and has a short practice conversation with the learner."
+              : `Shown to the learner as the task. AI feedback (Gemini) grades their ${type} against this prompt.`}
           </p>
         )}
       </div>

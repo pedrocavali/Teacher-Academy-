@@ -29,6 +29,17 @@ export type SpeakingFeedback = {
   overallComment: string;
 };
 
+export type CoachTurn = { role: "user" | "assistant"; content: string };
+
+export type CoachResponse = {
+  reply: string;
+  // App-driven, not AI-driven: the caller tells the provider when this is
+  // the last allowed turn (Blueprint Decision #4 — bounded practice, not an
+  // open-ended chatbot), and the model wraps up instead of deciding on its
+  // own when to stop.
+  isFinal: boolean;
+};
+
 export interface AIProvider {
   evaluateWriting(input: {
     prompt: string;
@@ -42,4 +53,11 @@ export interface AIProvider {
     audioMimeType: string;
     cefrLevel?: string;
   }): Promise<SpeakingFeedback>;
+
+  continueCoachConversation(input: {
+    scenario: string;
+    history: CoachTurn[];
+    cefrLevel?: string;
+    isFinalTurn: boolean;
+  }): Promise<CoachResponse>;
 }

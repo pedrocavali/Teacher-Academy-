@@ -63,6 +63,12 @@ export default async function AdminActivityDetailPage(
           don&apos;t use questions — the prompt above is shown directly to
           the learner, and Gemini grades their {activity.type} against it.
         </p>
+      ) : activity.type === "role_play" ? (
+        <p className="text-sm text-muted-foreground">
+          Role-play activities don&apos;t use questions — the scenario above
+          is what the AI coach uses to open and run the practice
+          conversation.
+        </p>
       ) : (
         <div className="flex flex-col gap-4">
           <div className="flex items-center justify-between">

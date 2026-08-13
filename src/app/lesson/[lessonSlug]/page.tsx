@@ -13,6 +13,7 @@ import {
 } from "@/components/activity/activity-player";
 import { WritingActivity } from "@/components/writing/writing-activity";
 import { SpeakingActivity } from "@/components/speaking/speaking-activity";
+import { CoachChat } from "@/components/coach/coach-chat";
 
 const PLAYABLE_QUESTION_TYPES = new Set([
   "multiple_choice",
@@ -119,9 +120,10 @@ export default async function LessonPage(
 
   const writingActivities = (activities ?? []).filter((a) => a.type === "writing");
   const speakingActivities = (activities ?? []).filter((a) => a.type === "speaking");
+  const rolePlayActivities = (activities ?? []).filter((a) => a.type === "role_play");
 
   const playableActivities: PlayableActivity[] = (activities ?? [])
-    .filter((a) => a.type !== "writing" && a.type !== "speaking")
+    .filter((a) => a.type !== "writing" && a.type !== "speaking" && a.type !== "role_play")
     .map((activity) => {
       const questions = (activity.questions ?? [])
         .filter((q) => PLAYABLE_QUESTION_TYPES.has(q.type))
@@ -199,6 +201,18 @@ export default async function LessonPage(
               key={activity.id}
               activityId={activity.id}
               userId={user.id}
+              prompt={activity.instructions}
+            />
+          ))}
+        </div>
+      )}
+
+      {rolePlayActivities.length > 0 && (
+        <div className="flex flex-col gap-6">
+          {rolePlayActivities.map((activity) => (
+            <CoachChat
+              key={activity.id}
+              activityId={activity.id}
               prompt={activity.instructions}
             />
           ))}

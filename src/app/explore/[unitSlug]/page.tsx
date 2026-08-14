@@ -1,8 +1,11 @@
 import type { Metadata } from "next";
+import Image from "next/image";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
 import { LessonCard } from "@/components/catalog/lesson-card";
+import { Badge } from "@/components/ui/badge";
+import { unitCoverSrc } from "@/lib/curriculum/unit-cover";
 
 const TRACK_LABELS: Record<string, string> = {
   general: "General English",
@@ -46,13 +49,21 @@ export default async function UnitDetailPage(
         <Link href="/explore" className="text-sm text-muted-foreground hover:underline">
           ← Explore
         </Link>
-        <span className="text-xs font-medium uppercase tracking-wide text-primary">
-          {TRACK_LABELS[unit.track] ?? unit.track}
-        </span>
-        <h1 className="text-2xl font-semibold tracking-tight">{unit.title}</h1>
-        {unit.description && (
-          <p className="text-sm text-muted-foreground">{unit.description}</p>
-        )}
+      </div>
+
+      <div className="overflow-hidden rounded-xl border border-border shadow-[var(--card-shadow)]">
+        <div className="relative h-40 w-full bg-muted sm:h-56">
+          <Image src={unitCoverSrc(unit.slug)} alt="" fill className="object-cover" />
+        </div>
+        <div className="flex flex-col gap-2 bg-background p-6">
+          <Badge className="w-fit bg-primary-soft text-primary">
+            {TRACK_LABELS[unit.track] ?? unit.track}
+          </Badge>
+          <h1 className="text-2xl font-semibold tracking-tight">{unit.title}</h1>
+          {unit.description && (
+            <p className="text-sm text-muted-foreground">{unit.description}</p>
+          )}
+        </div>
       </div>
 
       {!lessons || lessons.length === 0 ? (

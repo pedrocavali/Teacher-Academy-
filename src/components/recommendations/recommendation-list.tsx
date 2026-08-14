@@ -15,10 +15,7 @@ export function RecommendationList({
   }
 
   return (
-    <div className="flex w-full max-w-sm flex-col gap-3">
-      <h2 className="text-sm font-medium text-muted-foreground">
-        Recommended for you
-      </h2>
+    <div className="grid grid-cols-1 gap-4 sm:grid-cols-3">
       {recommendations.map((rec) => (
         <Link
           key={rec.recommendationId}
@@ -27,7 +24,7 @@ export function RecommendationList({
             markRecommendationClicked(rec.recommendationId);
           }}
         >
-          <Card className="gap-1 transition hover:border-primary">
+          <Card className="flex h-full flex-col gap-1 shadow-[var(--card-shadow)] transition-transform hover:-translate-y-0.5 hover:border-primary">
             <p className="text-sm font-medium">{rec.title}</p>
             <p className="text-xs text-muted-foreground">{rec.reasonText}</p>
           </Card>

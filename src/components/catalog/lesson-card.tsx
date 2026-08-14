@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { Card } from "@/components/ui/card";
+import { LevelBadge } from "@/components/ui/badge";
 
 export function LessonCard({
   lesson,
@@ -15,9 +16,9 @@ export function LessonCard({
 }) {
   return (
     <Link href={`/lesson/${lesson.slug}`}>
-      <Card className="flex h-full flex-col gap-2 transition-colors hover:border-primary">
+      <Card className="flex h-full flex-col gap-2 shadow-[var(--card-shadow)] transition-transform hover:-translate-y-0.5 hover:border-primary">
         <div className="flex items-center gap-2 text-xs font-medium text-muted-foreground">
-          <span className="rounded-full bg-muted px-2 py-0.5">{lesson.cefr_level}</span>
+          <LevelBadge level={lesson.cefr_level} />
           <span className="capitalize">{lesson.primary_skill}</span>
           <span>·</span>
           <span>{lesson.estimated_minutes} min</span>

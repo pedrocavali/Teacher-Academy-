@@ -15,6 +15,10 @@ const nextConfig: NextConfig = {
           },
         ]
       : [],
+    // Safe here: these are static SVGs authored for this repo (unit cover
+    // art in public/covers/), never user-uploaded content, so the usual
+    // SVG-script XSS concern this flag guards against doesn't apply.
+    dangerouslyAllowSVG: true,
   },
 };
 

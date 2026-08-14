@@ -11,11 +11,11 @@ export function ContentTextBlock({
   text: string;
 }) {
   return (
-    <div className="flex flex-col gap-2 rounded-lg border border-border p-4">
-      <span className="text-xs font-medium uppercase tracking-wide text-muted-foreground">
+    <div className="flex flex-col gap-3 rounded-xl border border-border bg-primary-soft/40 p-6">
+      <span className="text-xs font-semibold uppercase tracking-wide text-primary">
         {LABELS[type] ?? type}
       </span>
-      <p className="whitespace-pre-wrap text-sm leading-relaxed">{text}</p>
+      <p className="whitespace-pre-wrap text-base leading-8 text-foreground">{text}</p>
     </div>
   );
 }

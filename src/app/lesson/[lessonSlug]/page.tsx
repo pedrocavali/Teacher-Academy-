@@ -15,6 +15,7 @@ import {
 import { WritingActivity } from "@/components/writing/writing-activity";
 import { SpeakingActivity } from "@/components/speaking/speaking-activity";
 import { CoachChat } from "@/components/coach/coach-chat";
+import { LevelBadge } from "@/components/ui/badge";
 
 const PLAYABLE_QUESTION_TYPES = new Set([
   "multiple_choice",
@@ -153,9 +154,10 @@ export default async function LessonPage(
     });
 
   const unit = lesson.units as unknown as { slug: string; title: string } | null;
+  const playableWithQuestions = playableActivities.filter((a) => a.questions.length > 0);
 
   return (
-    <div className="mx-auto flex w-full max-w-2xl flex-1 flex-col gap-8 px-6 py-12">
+    <div className="mx-auto flex w-full max-w-2xl flex-1 flex-col gap-10 px-6 py-12">
       <div className="flex flex-col gap-2">
         {unit && (
           <Link
@@ -166,62 +168,80 @@ export default async function LessonPage(
           </Link>
         )}
         <div className="flex items-center gap-2 text-xs font-medium text-muted-foreground">
-          <span className="rounded-full bg-muted px-2 py-0.5">{lesson.cefr_level}</span>
+          <LevelBadge level={lesson.cefr_level} />
           <span className="capitalize">{lesson.primary_skill}</span>
           <span>·</span>
           <span>{lesson.estimated_minutes} min</span>
         </div>
-        <h1 className="text-2xl font-semibold tracking-tight">{lesson.title}</h1>
+        <h1 className="text-2xl font-semibold tracking-tight sm:text-3xl">{lesson.title}</h1>
         <p className="text-sm text-muted-foreground">{lesson.objective}</p>
       </div>
 
       <ContentCore items={renderableItems} />
 
-      {playableActivities.length > 0 && (
-        <div className="flex flex-col gap-6">
-          {playableActivities
-            .filter((activity) => activity.questions.length > 0)
-            .map((activity) => (
+      {playableWithQuestions.length > 0 && (
+        <section className="flex flex-col gap-4">
+          <h2 className="text-sm font-semibold uppercase tracking-wide text-muted-foreground">
+            Practice
+          </h2>
+          <div className="flex flex-col gap-6">
+            {playableWithQuestions.map((activity) => (
               <ActivityPlayer key={activity.id} activity={activity} />
             ))}
-        </div>
+          </div>
+        </section>
       )}
 
       {writingActivities.length > 0 && (
-        <div className="flex flex-col gap-6">
-          {writingActivities.map((activity) => (
-            <WritingActivity
-              key={activity.id}
-              activityId={activity.id}
-              prompt={activity.instructions}
-            />
-          ))}
-        </div>
+        <section className="flex flex-col gap-4">
+          <h2 className="text-sm font-semibold uppercase tracking-wide text-muted-foreground">
+            Writing Practice
+          </h2>
+          <div className="flex flex-col gap-6">
+            {writingActivities.map((activity) => (
+              <WritingActivity
+                key={activity.id}
+                activityId={activity.id}
+                prompt={activity.instructions}
+              />
+            ))}
+          </div>
+        </section>
       )}
 
       {speakingActivities.length > 0 && (
-        <div className="flex flex-col gap-6">
-          {speakingActivities.map((activity) => (
-            <SpeakingActivity
-              key={activity.id}
-              activityId={activity.id}
-              userId={user.id}
-              prompt={activity.instructions}
-            />
-          ))}
-        </div>
+        <section className="flex flex-col gap-4">
+          <h2 className="text-sm font-semibold uppercase tracking-wide text-muted-foreground">
+            Speaking Practice
+          </h2>
+          <div className="flex flex-col gap-6">
+            {speakingActivities.map((activity) => (
+              <SpeakingActivity
+                key={activity.id}
+                activityId={activity.id}
+                userId={user.id}
+                prompt={activity.instructions}
+              />
+            ))}
+          </div>
+        </section>
       )}
 
       {rolePlayActivities.length > 0 && (
-        <div className="flex flex-col gap-6">
-          {rolePlayActivities.map((activity) => (
-            <CoachChat
-              key={activity.id}
-              activityId={activity.id}
-              prompt={activity.instructions}
-            />
-          ))}
-        </div>
+        <section className="flex flex-col gap-4">
+          <h2 className="text-sm font-semibold uppercase tracking-wide text-muted-foreground">
+            Role-Play with the AI Coach
+          </h2>
+          <div className="flex flex-col gap-6">
+            {rolePlayActivities.map((activity) => (
+              <CoachChat
+                key={activity.id}
+                activityId={activity.id}
+                prompt={activity.instructions}
+              />
+            ))}
+          </div>
+        </section>
       )}
 
       <CompleteLessonButton

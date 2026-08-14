@@ -32,8 +32,8 @@ export async function Header() {
   }
 
   return (
-    <header className="flex items-center justify-between border-b border-border px-6 py-4">
-      <Link href="/" className="text-sm font-semibold tracking-tight">
+    <header className="sticky top-0 z-10 flex items-center justify-between border-b border-border bg-background/95 px-6 py-4 backdrop-blur">
+      <Link href="/" className="text-base font-semibold tracking-tight">
         Teacher Academy
       </Link>
 

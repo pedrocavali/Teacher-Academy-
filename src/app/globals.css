@@ -6,6 +6,11 @@
 
   --primary: #4f46e5;
   --primary-foreground: #ffffff;
+  --primary-soft: #eef2ff;
+
+  --accent: #f59e0b;
+  --accent-foreground: #171717;
+  --accent-soft: #fffbeb;
 
   --muted: #f4f4f5;
   --muted-foreground: #71717a;
@@ -16,6 +21,23 @@
   --destructive-foreground: #ffffff;
 
   --success: #16a34a;
+
+  --card-shadow: 0 1px 2px rgb(0 0 0 / 0.04), 0 8px 24px -12px rgb(0 0 0 / 0.10);
+  --hero-gradient: linear-gradient(135deg, #eef2ff 0%, #fdf4ff 50%, #fffbeb 100%);
+
+  /* CEFR level accents — used for badges and unit/lesson cover art */
+  --level-a1: #16a34a;
+  --level-a1-soft: #f0fdf4;
+  --level-a2: #0d9488;
+  --level-a2-soft: #f0fdfa;
+  --level-b1: #2563eb;
+  --level-b1-soft: #eff6ff;
+  --level-b2: #4f46e5;
+  --level-b2-soft: #eef2ff;
+  --level-c1: #9333ea;
+  --level-c1-soft: #faf5ff;
+  --level-c2: #e11d48;
+  --level-c2-soft: #fff1f2;
 }
 
 @theme inline {
@@ -24,6 +46,11 @@
 
   --color-primary: var(--primary);
   --color-primary-foreground: var(--primary-foreground);
+  --color-primary-soft: var(--primary-soft);
+
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-accent-soft: var(--accent-soft);
 
   --color-muted: var(--muted);
   --color-muted-foreground: var(--muted-foreground);
@@ -34,6 +61,19 @@
   --color-destructive-foreground: var(--destructive-foreground);
 
   --color-success: var(--success);
+
+  --color-level-a1: var(--level-a1);
+  --color-level-a1-soft: var(--level-a1-soft);
+  --color-level-a2: var(--level-a2);
+  --color-level-a2-soft: var(--level-a2-soft);
+  --color-level-b1: var(--level-b1);
+  --color-level-b1-soft: var(--level-b1-soft);
+  --color-level-b2: var(--level-b2);
+  --color-level-b2-soft: var(--level-b2-soft);
+  --color-level-c1: var(--level-c1);
+  --color-level-c1-soft: var(--level-c1-soft);
+  --color-level-c2: var(--level-c2);
+  --color-level-c2-soft: var(--level-c2-soft);
 
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
@@ -46,6 +86,11 @@
 
     --primary: #818cf8;
     --primary-foreground: #171717;
+    --primary-soft: #1e1b4b;
+
+    --accent: #fbbf24;
+    --accent-foreground: #171717;
+    --accent-soft: #451a03;
 
     --muted: #18181b;
     --muted-foreground: #a1a1aa;
@@ -56,6 +101,22 @@
     --destructive-foreground: #171717;
 
     --success: #4ade80;
+
+    --card-shadow: 0 1px 2px rgb(0 0 0 / 0.2), 0 8px 24px -12px rgb(0 0 0 / 0.4);
+    --hero-gradient: linear-gradient(135deg, #1e1b4b 0%, #2e1065 50%, #451a03 100%);
+
+    --level-a1: #4ade80;
+    --level-a1-soft: #052e16;
+    --level-a2: #2dd4bf;
+    --level-a2-soft: #042f2e;
+    --level-b1: #60a5fa;
+    --level-b1-soft: #172554;
+    --level-b2: #818cf8;
+    --level-b2-soft: #1e1b4b;
+    --level-c1: #c084fc;
+    --level-c1-soft: #3b0764;
+    --level-c2: #fb7185;
+    --level-c2-soft: #4c0519;
   }
 }
 

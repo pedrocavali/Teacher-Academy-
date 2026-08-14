@@ -2,6 +2,7 @@
 
 import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
+import { createServiceRoleClient } from "@/lib/supabase/service-role";
 import { scoreSkill, overallLevel, type CefrLevel } from "@/lib/placement/scoring";
 import { isPlacementResponseCorrect, type PlacementResponse } from "@/lib/placement/grading";
 import type { AssessmentQuestionPayload } from "@/lib/placement/payload";
@@ -32,7 +33,12 @@ export async function submitPlacementAttempt(
     return { error: "Placement isn't available yet." };
   }
 
-  const { data: questions } = await supabase
+  // assessment_questions is admin-only under RLS (migration 15) — grading
+  // is the one place the real payload (with isCorrect/acceptedAnswers) is
+  // legitimately read, so it goes through the service-role client.
+  // `assessment` above was already confirmed published via the normal
+  // RLS-protected read.
+  const { data: questions } = await createServiceRoleClient()
     .from("assessment_questions")
     .select("id, skill, target_cefr_level, payload")
     .eq("assessment_id", assessment.id);

@@ -3,6 +3,7 @@ import Link from "next/link";
 import { notFound, redirect } from "next/navigation";
 import type { SupabaseClient } from "@supabase/supabase-js";
 import { createClient } from "@/lib/supabase/server";
+import { createServiceRoleClient } from "@/lib/supabase/service-role";
 import { ensureLessonStarted } from "@/lib/lesson/progress";
 import { ContentCore, type RenderableContentItem } from "@/components/lesson/content-core";
 import { CompleteLessonButton } from "@/components/lesson/complete-lesson-button";
@@ -106,10 +107,14 @@ export default async function LessonPage(
     .map((item) => toRenderableItem(supabase, item))
     .filter((item): item is RenderableContentItem => item !== null);
 
-  // Deliberately never selects is_correct or feedback — those only get
-  // read server-side, inside submitActivityAttempt, after the learner
-  // submits. See src/lib/activity/submit-attempt.ts.
-  const { data: activities } = await supabase
+  // question_options is admin-only under RLS (migration 15 — is_correct
+  // can't be hidden per-column from a row a learner's own session can
+  // otherwise read), so rendering the options at all requires the
+  // service-role client here. Deliberately never selects is_correct or
+  // feedback — those only get read server-side, inside
+  // submitActivityAttempt, after the learner submits. See
+  // src/lib/activity/submit-attempt.ts.
+  const { data: activities } = await createServiceRoleClient()
     .from("activities")
     .select(
       "id, type, skill, instructions, order_index, questions(id, prompt, type, order_index, question_options(id, text, order_index))",

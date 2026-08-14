@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
+import { createServiceRoleClient } from "@/lib/supabase/service-role";
 import type { AssessmentQuestionPayload } from "@/lib/placement/payload";
 import { PlacementForm, type PlayablePlacementQuestion } from "@/components/placement/placement-form";
 
@@ -27,8 +28,12 @@ export default async function PlacementPage() {
     .limit(1)
     .maybeSingle();
 
+  // assessment_questions is admin-only under RLS (migration 15), so this
+  // read goes through the service-role client. `assessment` above was
+  // already confirmed published via the normal RLS-protected read, so this
+  // is scoped correctly without re-checking status here.
   const { data: questions } = assessment
-    ? await supabase
+    ? await createServiceRoleClient()
         .from("assessment_questions")
         .select("id, skill, payload")
         .eq("assessment_id", assessment.id)

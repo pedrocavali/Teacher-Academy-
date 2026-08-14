@@ -1,6 +1,7 @@
 "use server";
 
 import { createClient } from "@/lib/supabase/server";
+import { createServiceRoleClient } from "@/lib/supabase/service-role";
 import { logEvent } from "@/lib/events/log";
 
 export type SubmittedResponse =
@@ -39,10 +40,17 @@ export async function submitActivityAttempt(
     return { error: "You need to be signed in." };
   }
 
-  const { data: questions, error } = await supabase
+  // question_options is admin-only under RLS (migration 15), so grading
+  // — the one place is_correct is legitimately read — goes through the
+  // service-role client. The activities!inner join replaces the RLS
+  // published-check that client would otherwise have provided.
+  const { data: questions, error } = await createServiceRoleClient()
     .from("questions")
-    .select("id, type, question_options(id, text, is_correct, order_index)")
-    .eq("activity_id", activityId);
+    .select(
+      "id, type, question_options(id, text, is_correct, order_index), activities!inner(status)",
+    )
+    .eq("activity_id", activityId)
+    .eq("activities.status", "published");
 
   if (error || !questions || questions.length === 0) {
     return { error: "Activity not found." };

@@ -6,6 +6,8 @@ import { signOut } from "@/lib/auth/actions";
 import { SubmitButton } from "@/components/auth/submit-button";
 import { Card } from "@/components/ui/card";
 import { buttonVariants } from "@/components/ui/button";
+import { getRecommendations } from "@/lib/recommendations/engine";
+import { RecommendationList } from "@/components/recommendations/recommendation-list";
 
 export const metadata: Metadata = {
   title: "Dashboard — Teacher Academy",
@@ -37,8 +39,10 @@ export default async function DashboardPage() {
     .limit(1)
     .maybeSingle();
 
+  const recommendations = await getRecommendations(supabase, user.id);
+
   return (
-    <div className="flex flex-1 flex-col items-center px-6 py-24">
+    <div className="flex flex-1 flex-col items-center gap-6 px-6 py-24">
       <Card className="flex w-full max-w-sm flex-col gap-6">
         <div>
           <h1 className="text-2xl font-semibold tracking-tight">
@@ -82,6 +86,8 @@ export default async function DashboardPage() {
           <SubmitButton pendingLabel="Signing out...">Sign out</SubmitButton>
         </form>
       </Card>
+
+      <RecommendationList recommendations={recommendations} />
     </div>
   );
 }

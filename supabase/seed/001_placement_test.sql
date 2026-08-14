@@ -1,395 +1,51 @@
--- Placement test content — 36 original questions (grammar, vocabulary,
+-- Placement test content -- 36 original questions (grammar, vocabulary,
 -- reading), 2 per CEFR level (A1-C2), calibrated for the weighted scoring
 -- in src/lib/placement/scoring.ts. All wording is original, written for
--- this platform — no textbook content copied.
+-- this platform -- no textbook content copied.
 --
 -- Run this once in the Supabase SQL Editor, after all schema migrations
 -- (through 20260813000015) have been applied. Safe to re-run only after
--- deleting the previous placement assessment first (it is not idempotent —
+-- deleting the previous placement assessment first (it is not idempotent --
 -- running it twice creates a duplicate assessment).
 
 insert into public.assessments (id, type, title, version, status)
-values (
-  'aaaaaaaa-0000-4000-8000-000000000001',
-  'placement',
-  'Teacher Academy Placement Test',
-  1,
-  'published'
-);
+values ('aaaaaaaa-0000-4000-8000-000000000001', 'placement', 'Teacher Academy Placement Test', 1, 'published');
 
 insert into public.assessment_questions (assessment_id, skill, target_cefr_level, order_index, payload)
 values
--- GRAMMAR
-('aaaaaaaa-0000-4000-8000-000000000001', 'grammar', 'A1', 1, '{
-  "type": "multiple_choice",
-  "prompt": "She ___ a teacher.",
-  "options": [
-    {"text": "is", "isCorrect": true},
-    {"text": "are", "isCorrect": false},
-    {"text": "am", "isCorrect": false}
-  ]
-}'::jsonb),
-
-('aaaaaaaa-0000-4000-8000-000000000001', 'grammar', 'A1', 2, '{
-  "type": "multiple_choice",
-  "prompt": "I ___ two brothers.",
-  "options": [
-    {"text": "have", "isCorrect": true},
-    {"text": "has", "isCorrect": false},
-    {"text": "having", "isCorrect": false}
-  ]
-}'::jsonb),
-
-('aaaaaaaa-0000-4000-8000-000000000001', 'grammar', 'A2', 3, '{
-  "type": "multiple_choice",
-  "prompt": "They ___ to the cinema last night.",
-  "options": [
-    {"text": "go", "isCorrect": false},
-    {"text": "went", "isCorrect": true},
-    {"text": "goes", "isCorrect": false}
-  ]
-}'::jsonb),
-
-('aaaaaaaa-0000-4000-8000-000000000001', 'grammar', 'A2', 4, '{
-  "type": "multiple_choice",
-  "prompt": "There ___ a lot of people at the party.",
-  "options": [
-    {"text": "was", "isCorrect": false},
-    {"text": "were", "isCorrect": true},
-    {"text": "is", "isCorrect": false}
-  ]
-}'::jsonb),
-
-('aaaaaaaa-0000-4000-8000-000000000001', 'grammar', 'B1', 5, '{
-  "type": "multiple_choice",
-  "prompt": "If it rains tomorrow, we ___ the picnic.",
-  "options": [
-    {"text": "cancel", "isCorrect": false},
-    {"text": "will cancel", "isCorrect": true},
-    {"text": "canceled", "isCorrect": false}
-  ]
-}'::jsonb),
-
-('aaaaaaaa-0000-4000-8000-000000000001', 'grammar', 'B1', 6, '{
-  "type": "multiple_choice",
-  "prompt": "She has been working here ___ 2019.",
-  "options": [
-    {"text": "since", "isCorrect": true},
-    {"text": "for", "isCorrect": false},
-    {"text": "from", "isCorrect": false}
-  ]
-}'::jsonb),
-
-('aaaaaaaa-0000-4000-8000-000000000001', 'grammar', 'B2', 7, '{
-  "type": "multiple_choice",
-  "prompt": "By the time we arrived, the film ___.",
-  "options": [
-    {"text": "already started", "isCorrect": false},
-    {"text": "had already started", "isCorrect": true},
-    {"text": "already starts", "isCorrect": false}
-  ]
-}'::jsonb),
-
-('aaaaaaaa-0000-4000-8000-000000000001', 'grammar', 'B2', 8, '{
-  "type": "multiple_choice",
-  "prompt": "I wish I ___ more time to prepare for the exam.",
-  "options": [
-    {"text": "have", "isCorrect": false},
-    {"text": "had", "isCorrect": true},
-    {"text": "would have", "isCorrect": false}
-  ]
-}'::jsonb),
-
-('aaaaaaaa-0000-4000-8000-000000000001', 'grammar', 'C1', 9, '{
-  "type": "multiple_choice",
-  "prompt": "Not only ___ the deadline, but she also improved the report.",
-  "options": [
-    {"text": "she met", "isCorrect": false},
-    {"text": "did she meet", "isCorrect": true},
-    {"text": "she did meet", "isCorrect": false}
-  ]
-}'::jsonb),
-
-('aaaaaaaa-0000-4000-8000-000000000001', 'grammar', 'C1', 10, '{
-  "type": "multiple_choice",
-  "prompt": "The committee insisted that the proposal ___ revised before submission.",
-  "options": [
-    {"text": "is", "isCorrect": false},
-    {"text": "be", "isCorrect": true},
-    {"text": "was", "isCorrect": false}
-  ]
-}'::jsonb),
-
-('aaaaaaaa-0000-4000-8000-000000000001', 'grammar', 'C2', 11, '{
-  "type": "multiple_choice",
-  "prompt": "___ the storm, the flight departed on schedule.",
-  "options": [
-    {"text": "Despite of", "isCorrect": false},
-    {"text": "In spite", "isCorrect": false},
-    {"text": "Notwithstanding", "isCorrect": true}
-  ]
-}'::jsonb),
-
-('aaaaaaaa-0000-4000-8000-000000000001', 'grammar', 'C2', 12, '{
-  "type": "multiple_choice",
-  "prompt": "Had I known about the traffic, I ___ earlier.",
-  "options": [
-    {"text": "would leave", "isCorrect": false},
-    {"text": "would have left", "isCorrect": true},
-    {"text": "left", "isCorrect": false}
-  ]
-}'::jsonb),
-
--- VOCABULARY
-('aaaaaaaa-0000-4000-8000-000000000001', 'vocabulary', 'A1', 13, '{
-  "type": "multiple_choice",
-  "prompt": "Choose the opposite of \"big\".",
-  "options": [
-    {"text": "small", "isCorrect": true},
-    {"text": "tall", "isCorrect": false},
-    {"text": "fast", "isCorrect": false}
-  ]
-}'::jsonb),
-
-('aaaaaaaa-0000-4000-8000-000000000001', 'vocabulary', 'A1', 14, '{
-  "type": "multiple_choice",
-  "prompt": "What do you call the meal you eat in the morning?",
-  "options": [
-    {"text": "dinner", "isCorrect": false},
-    {"text": "breakfast", "isCorrect": true},
-    {"text": "lunch", "isCorrect": false}
-  ]
-}'::jsonb),
-
-('aaaaaaaa-0000-4000-8000-000000000001', 'vocabulary', 'A2', 15, '{
-  "type": "multiple_choice",
-  "prompt": "My sister is very ___ ; she always helps other people.",
-  "options": [
-    {"text": "lazy", "isCorrect": false},
-    {"text": "kind", "isCorrect": true},
-    {"text": "angry", "isCorrect": false}
-  ]
-}'::jsonb),
-
-('aaaaaaaa-0000-4000-8000-000000000001', 'vocabulary', 'A2', 16, '{
-  "type": "multiple_choice",
-  "prompt": "I need to ___ some money from the bank.",
-  "options": [
-    {"text": "withdraw", "isCorrect": true},
-    {"text": "borrow", "isCorrect": false},
-    {"text": "lend", "isCorrect": false}
-  ]
-}'::jsonb),
-
-('aaaaaaaa-0000-4000-8000-000000000001', 'vocabulary', 'B1', 17, '{
-  "type": "multiple_choice",
-  "prompt": "The company decided to ___ the product due to poor sales.",
-  "options": [
-    {"text": "launch", "isCorrect": false},
-    {"text": "discontinue", "isCorrect": true},
-    {"text": "advertise", "isCorrect": false}
-  ]
-}'::jsonb),
-
-('aaaaaaaa-0000-4000-8000-000000000001', 'vocabulary', 'B1', 18, '{
-  "type": "multiple_choice",
-  "prompt": "She has a great sense of humor; she is always ___ jokes.",
-  "options": [
-    {"text": "telling", "isCorrect": true},
-    {"text": "saying", "isCorrect": false},
-    {"text": "speaking", "isCorrect": false}
-  ]
-}'::jsonb),
-
-('aaaaaaaa-0000-4000-8000-000000000001', 'vocabulary', 'B2', 19, '{
-  "type": "multiple_choice",
-  "prompt": "After months of disagreement, the two companies finally reached a ___ in their negotiations.",
-  "options": [
-    {"text": "breakthrough", "isCorrect": true},
-    {"text": "breakdown", "isCorrect": false},
-    {"text": "backlog", "isCorrect": false}
-  ]
-}'::jsonb),
-
-('aaaaaaaa-0000-4000-8000-000000000001', 'vocabulary', 'B2', 20, '{
-  "type": "multiple_choice",
-  "prompt": "His argument was completely ___ ; it had no logical basis.",
-  "options": [
-    {"text": "convincing", "isCorrect": false},
-    {"text": "unfounded", "isCorrect": true},
-    {"text": "persuasive", "isCorrect": false}
-  ]
-}'::jsonb),
-
-('aaaaaaaa-0000-4000-8000-000000000001', 'vocabulary', 'C1', 21, '{
-  "type": "multiple_choice",
-  "prompt": "The scientist''s findings were later ___ by independent research, confirming their accuracy.",
-  "options": [
-    {"text": "corroborated", "isCorrect": true},
-    {"text": "refuted", "isCorrect": false},
-    {"text": "overlooked", "isCorrect": false}
-  ]
-}'::jsonb),
-
-('aaaaaaaa-0000-4000-8000-000000000001', 'vocabulary', 'C1', 22, '{
-  "type": "multiple_choice",
-  "prompt": "The politician''s speech was full of ___ , vague statements designed to avoid controversy.",
-  "options": [
-    {"text": "platitudes", "isCorrect": true},
-    {"text": "insights", "isCorrect": false},
-    {"text": "statistics", "isCorrect": false}
-  ]
-}'::jsonb),
-
-('aaaaaaaa-0000-4000-8000-000000000001', 'vocabulary', 'C2', 23, '{
-  "type": "multiple_choice",
-  "prompt": "Her ___ writing style made even complex topics easy to understand.",
-  "options": [
-    {"text": "convoluted", "isCorrect": false},
-    {"text": "lucid", "isCorrect": true},
-    {"text": "turgid", "isCorrect": false}
-  ]
-}'::jsonb),
-
-('aaaaaaaa-0000-4000-8000-000000000001', 'vocabulary', 'C2', 24, '{
-  "type": "multiple_choice",
-  "prompt": "The negotiations were fraught with ___ , as neither side was willing to compromise.",
-  "options": [
-    {"text": "acrimony", "isCorrect": true},
-    {"text": "harmony", "isCorrect": false},
-    {"text": "indifference", "isCorrect": false}
-  ]
-}'::jsonb),
-
--- READING
-('aaaaaaaa-0000-4000-8000-000000000001', 'reading', 'A1', 25, '{
-  "type": "multiple_choice",
-  "context": "My name is Ana. I am a teacher. I live in São Paulo with my family.",
-  "prompt": "Where does Ana live?",
-  "options": [
-    {"text": "São Paulo", "isCorrect": true},
-    {"text": "Rio de Janeiro", "isCorrect": false},
-    {"text": "Lisbon", "isCorrect": false}
-  ]
-}'::jsonb),
-
-('aaaaaaaa-0000-4000-8000-000000000001', 'reading', 'A1', 26, '{
-  "type": "multiple_choice",
-  "context": "Tom has a dog. The dog is black and small. Tom walks the dog every morning.",
-  "prompt": "What color is the dog?",
-  "options": [
-    {"text": "white", "isCorrect": false},
-    {"text": "black", "isCorrect": true},
-    {"text": "brown", "isCorrect": false}
-  ]
-}'::jsonb),
-
-('aaaaaaaa-0000-4000-8000-000000000001', 'reading', 'A2', 27, '{
-  "type": "multiple_choice",
-  "context": "Every Saturday, Maria goes to the market near her house. She buys fruit, vegetables, and sometimes flowers. She likes to cook fresh meals for her family.",
-  "prompt": "When does Maria go to the market?",
-  "options": [
-    {"text": "Every day", "isCorrect": false},
-    {"text": "Every Saturday", "isCorrect": true},
-    {"text": "Every Sunday", "isCorrect": false}
-  ]
-}'::jsonb),
-
-('aaaaaaaa-0000-4000-8000-000000000001', 'reading', 'A2', 28, '{
-  "type": "multiple_choice",
-  "context": "The museum opens at 9 a.m. and closes at 5 p.m. It is closed on Mondays. Tickets cost $10 for adults and $5 for children.",
-  "prompt": "How much does a ticket cost for a child?",
-  "options": [
-    {"text": "$10", "isCorrect": false},
-    {"text": "$5", "isCorrect": true},
-    {"text": "Free", "isCorrect": false}
-  ]
-}'::jsonb),
-
-('aaaaaaaa-0000-4000-8000-000000000001', 'reading', 'B1', 29, '{
-  "type": "multiple_choice",
-  "context": "Remote work has become increasingly common since the pandemic. Many employees report higher productivity, but some managers worry about team communication. Companies are now experimenting with hybrid models that combine office and home work.",
-  "prompt": "What are some managers concerned about?",
-  "options": [
-    {"text": "Productivity", "isCorrect": false},
-    {"text": "Team communication", "isCorrect": true},
-    {"text": "Salaries", "isCorrect": false}
-  ]
-}'::jsonb),
-
-('aaaaaaaa-0000-4000-8000-000000000001', 'reading', 'B1', 30, '{
-  "type": "multiple_choice",
-  "context": "The city council announced a new recycling program starting next month. Residents will receive separate bins for paper, plastic, and organic waste. Officials hope the program will reduce landfill waste by 30% within two years.",
-  "prompt": "What is the goal of the new program?",
-  "options": [
-    {"text": "Increase taxes", "isCorrect": false},
-    {"text": "Reduce landfill waste", "isCorrect": true},
-    {"text": "Build a new bin factory", "isCorrect": false}
-  ]
-}'::jsonb),
-
-('aaaaaaaa-0000-4000-8000-000000000001', 'reading', 'B2', 31, '{
-  "type": "multiple_choice",
-  "context": "Despite significant advances in renewable energy technology, many countries still rely heavily on fossil fuels due to existing infrastructure and economic interests. Transitioning to a fully renewable grid requires not only technological innovation but also substantial policy changes and public investment.",
-  "prompt": "According to the passage, what is one obstacle to renewable energy adoption besides technology?",
-  "options": [
-    {"text": "Lack of sunlight", "isCorrect": false},
-    {"text": "Existing infrastructure and economic interests", "isCorrect": true},
-    {"text": "Public opposition to clean energy", "isCorrect": false}
-  ]
-}'::jsonb),
-
-('aaaaaaaa-0000-4000-8000-000000000001', 'reading', 'B2', 32, '{
-  "type": "multiple_choice",
-  "context": "The novelist''s latest work has divided critics: some praise its experimental structure, while others argue it sacrifices narrative coherence for style. Regardless, it has become a bestseller, suggesting that readers are more forgiving of unconventional storytelling than critics assume.",
-  "prompt": "What does the passage suggest about readers'' reactions?",
-  "options": [
-    {"text": "They dislike experimental novels", "isCorrect": false},
-    {"text": "They may be more open to unconventional storytelling than critics", "isCorrect": true},
-    {"text": "They agree entirely with critics", "isCorrect": false}
-  ]
-}'::jsonb),
-
-('aaaaaaaa-0000-4000-8000-000000000001', 'reading', 'C1', 33, '{
-  "type": "multiple_choice",
-  "context": "While automation promises increased efficiency, its unchecked expansion raises profound questions about the future of labor markets. Economists remain divided: some contend that new industries will absorb displaced workers, as has historically occurred, while others warn that the pace and scale of current automation may outstrip society''s capacity to adapt.",
-  "prompt": "What is the main point of disagreement among economists mentioned in the passage?",
-  "options": [
-    {"text": "Whether automation increases efficiency", "isCorrect": false},
-    {"text": "Whether new industries can absorb displaced workers at the current pace", "isCorrect": true},
-    {"text": "Whether automation should be banned", "isCorrect": false}
-  ]
-}'::jsonb),
-
-('aaaaaaaa-0000-4000-8000-000000000001', 'reading', 'C1', 34, '{
-  "type": "multiple_choice",
-  "context": "Critics of the policy argue that its short-term benefits are outweighed by long-term structural risks, yet proponents counter that inaction poses an even greater threat to economic stability. The debate, largely unresolved, reflects a broader tension between immediate pragmatism and long-term planning.",
-  "prompt": "According to the passage, what do proponents of the policy believe?",
-  "options": [
-    {"text": "The policy has no risks", "isCorrect": false},
-    {"text": "Inaction is riskier than the policy itself", "isCorrect": true},
-    {"text": "The policy should be reversed immediately", "isCorrect": false}
-  ]
-}'::jsonb),
-
-('aaaaaaaa-0000-4000-8000-000000000001', 'reading', 'C2', 35, '{
-  "type": "multiple_choice",
-  "context": "The philosopher''s argument, though internally coherent, rests on premises that are themselves contestable; to accept her conclusion, one must first grant assumptions about human nature that many contemporary thinkers would reject outright. This is not to dismiss the argument''s rigor, but rather to situate it within a broader epistemological debate that remains unresolved.",
-  "prompt": "What is the author''s overall assessment of the philosopher''s argument?",
-  "options": [
-    {"text": "It is flawed and should be dismissed", "isCorrect": false},
-    {"text": "It is logically rigorous but depends on debatable premises", "isCorrect": true},
-    {"text": "It is universally accepted by contemporary thinkers", "isCorrect": false}
-  ]
-}'::jsonb),
-
-('aaaaaaaa-0000-4000-8000-000000000001', 'reading', 'C2', 36, '{
-  "type": "multiple_choice",
-  "context": "It would be reductive to characterize the author''s body of work as merely a reaction against modernist orthodoxy; rather, her work engages critically with that tradition while simultaneously carving out a distinct aesthetic vocabulary, one that resists easy categorization within existing literary movements.",
-  "prompt": "What does the passage suggest about the author''s relationship to modernism?",
-  "options": [
-    {"text": "She rejects modernism entirely", "isCorrect": false},
-    {"text": "She engages critically with modernism while developing her own distinct style", "isCorrect": true},
-    {"text": "She strictly follows modernist conventions", "isCorrect": false}
-  ]
-}'::jsonb);
+('aaaaaaaa-0000-4000-8000-000000000001', 'grammar', 'A1', 1, '{"type": "multiple_choice", "prompt": "She ___ a teacher.", "options": [{"text": "is", "isCorrect": true}, {"text": "are", "isCorrect": false}, {"text": "am", "isCorrect": false}]}'::jsonb),
+('aaaaaaaa-0000-4000-8000-000000000001', 'grammar', 'A1', 2, '{"type": "multiple_choice", "prompt": "I ___ two brothers.", "options": [{"text": "have", "isCorrect": true}, {"text": "has", "isCorrect": false}, {"text": "having", "isCorrect": false}]}'::jsonb),
+('aaaaaaaa-0000-4000-8000-000000000001', 'grammar', 'A2', 3, '{"type": "multiple_choice", "prompt": "They ___ to the cinema last night.", "options": [{"text": "go", "isCorrect": false}, {"text": "went", "isCorrect": true}, {"text": "goes", "isCorrect": false}]}'::jsonb),
+('aaaaaaaa-0000-4000-8000-000000000001', 'grammar', 'A2', 4, '{"type": "multiple_choice", "prompt": "There ___ a lot of people at the party.", "options": [{"text": "was", "isCorrect": false}, {"text": "were", "isCorrect": true}, {"text": "is", "isCorrect": false}]}'::jsonb),
+('aaaaaaaa-0000-4000-8000-000000000001', 'grammar', 'B1', 5, '{"type": "multiple_choice", "prompt": "If it rains tomorrow, we ___ the picnic.", "options": [{"text": "cancel", "isCorrect": false}, {"text": "will cancel", "isCorrect": true}, {"text": "canceled", "isCorrect": false}]}'::jsonb),
+('aaaaaaaa-0000-4000-8000-000000000001', 'grammar', 'B1', 6, '{"type": "multiple_choice", "prompt": "She has been working here ___ 2019.", "options": [{"text": "since", "isCorrect": true}, {"text": "for", "isCorrect": false}, {"text": "from", "isCorrect": false}]}'::jsonb),
+('aaaaaaaa-0000-4000-8000-000000000001', 'grammar', 'B2', 7, '{"type": "multiple_choice", "prompt": "By the time we arrived, the film ___.", "options": [{"text": "already started", "isCorrect": false}, {"text": "had already started", "isCorrect": true}, {"text": "already starts", "isCorrect": false}]}'::jsonb),
+('aaaaaaaa-0000-4000-8000-000000000001', 'grammar', 'B2', 8, '{"type": "multiple_choice", "prompt": "I wish I ___ more time to prepare for the exam.", "options": [{"text": "have", "isCorrect": false}, {"text": "had", "isCorrect": true}, {"text": "would have", "isCorrect": false}]}'::jsonb),
+('aaaaaaaa-0000-4000-8000-000000000001', 'grammar', 'C1', 9, '{"type": "multiple_choice", "prompt": "Not only ___ the deadline, but she also improved the report.", "options": [{"text": "she met", "isCorrect": false}, {"text": "did she meet", "isCorrect": true}, {"text": "she did meet", "isCorrect": false}]}'::jsonb),
+('aaaaaaaa-0000-4000-8000-000000000001', 'grammar', 'C1', 10, '{"type": "multiple_choice", "prompt": "The committee insisted that the proposal ___ revised before submission.", "options": [{"text": "is", "isCorrect": false}, {"text": "be", "isCorrect": true}, {"text": "was", "isCorrect": false}]}'::jsonb),
+('aaaaaaaa-0000-4000-8000-000000000001', 'grammar', 'C2', 11, '{"type": "multiple_choice", "prompt": "___ the storm, the flight departed on schedule.", "options": [{"text": "Despite of", "isCorrect": false}, {"text": "In spite", "isCorrect": false}, {"text": "Notwithstanding", "isCorrect": true}]}'::jsonb),
+('aaaaaaaa-0000-4000-8000-000000000001', 'grammar', 'C2', 12, '{"type": "multiple_choice", "prompt": "Had I known about the traffic, I ___ earlier.", "options": [{"text": "would leave", "isCorrect": false}, {"text": "would have left", "isCorrect": true}, {"text": "left", "isCorrect": false}]}'::jsonb),
+('aaaaaaaa-0000-4000-8000-000000000001', 'vocabulary', 'A1', 13, '{"type": "multiple_choice", "prompt": "Choose the opposite of \"big\".", "options": [{"text": "small", "isCorrect": true}, {"text": "tall", "isCorrect": false}, {"text": "fast", "isCorrect": false}]}'::jsonb),
+('aaaaaaaa-0000-4000-8000-000000000001', 'vocabulary', 'A1', 14, '{"type": "multiple_choice", "prompt": "What do you call the meal you eat in the morning?", "options": [{"text": "dinner", "isCorrect": false}, {"text": "breakfast", "isCorrect": true}, {"text": "lunch", "isCorrect": false}]}'::jsonb),
+('aaaaaaaa-0000-4000-8000-000000000001', 'vocabulary', 'A2', 15, '{"type": "multiple_choice", "prompt": "My sister is very ___ ; she always helps other people.", "options": [{"text": "lazy", "isCorrect": false}, {"text": "kind", "isCorrect": true}, {"text": "angry", "isCorrect": false}]}'::jsonb),
+('aaaaaaaa-0000-4000-8000-000000000001', 'vocabulary', 'A2', 16, '{"type": "multiple_choice", "prompt": "I need to ___ some money from the bank.", "options": [{"text": "withdraw", "isCorrect": true}, {"text": "borrow", "isCorrect": false}, {"text": "lend", "isCorrect": false}]}'::jsonb),
+('aaaaaaaa-0000-4000-8000-000000000001', 'vocabulary', 'B1', 17, '{"type": "multiple_choice", "prompt": "The company decided to ___ the product due to poor sales.", "options": [{"text": "launch", "isCorrect": false}, {"text": "discontinue", "isCorrect": true}, {"text": "advertise", "isCorrect": false}]}'::jsonb),
+('aaaaaaaa-0000-4000-8000-000000000001', 'vocabulary', 'B1', 18, '{"type": "multiple_choice", "prompt": "She has a great sense of humor; she is always ___ jokes.", "options": [{"text": "telling", "isCorrect": true}, {"text": "saying", "isCorrect": false}, {"text": "speaking", "isCorrect": false}]}'::jsonb),
+('aaaaaaaa-0000-4000-8000-000000000001', 'vocabulary', 'B2', 19, '{"type": "multiple_choice", "prompt": "After months of disagreement, the two companies finally reached a ___ in their negotiations.", "options": [{"text": "breakthrough", "isCorrect": true}, {"text": "breakdown", "isCorrect": false}, {"text": "backlog", "isCorrect": false}]}'::jsonb),
+('aaaaaaaa-0000-4000-8000-000000000001', 'vocabulary', 'B2', 20, '{"type": "multiple_choice", "prompt": "His argument was completely ___ ; it had no logical basis.", "options": [{"text": "convincing", "isCorrect": false}, {"text": "unfounded", "isCorrect": true}, {"text": "persuasive", "isCorrect": false}]}'::jsonb),
+('aaaaaaaa-0000-4000-8000-000000000001', 'vocabulary', 'C1', 21, '{"type": "multiple_choice", "prompt": "The scientist''s findings were later ___ by independent research, confirming their accuracy.", "options": [{"text": "corroborated", "isCorrect": true}, {"text": "refuted", "isCorrect": false}, {"text": "overlooked", "isCorrect": false}]}'::jsonb),
+('aaaaaaaa-0000-4000-8000-000000000001', 'vocabulary', 'C1', 22, '{"type": "multiple_choice", "prompt": "The politician''s speech was full of ___ , vague statements designed to avoid controversy.", "options": [{"text": "platitudes", "isCorrect": true}, {"text": "insights", "isCorrect": false}, {"text": "statistics", "isCorrect": false}]}'::jsonb),
+('aaaaaaaa-0000-4000-8000-000000000001', 'vocabulary', 'C2', 23, '{"type": "multiple_choice", "prompt": "Her ___ writing style made even complex topics easy to understand.", "options": [{"text": "convoluted", "isCorrect": false}, {"text": "lucid", "isCorrect": true}, {"text": "turgid", "isCorrect": false}]}'::jsonb),
+('aaaaaaaa-0000-4000-8000-000000000001', 'vocabulary', 'C2', 24, '{"type": "multiple_choice", "prompt": "The negotiations were fraught with ___ , as neither side was willing to compromise.", "options": [{"text": "acrimony", "isCorrect": true}, {"text": "harmony", "isCorrect": false}, {"text": "indifference", "isCorrect": false}]}'::jsonb),
+('aaaaaaaa-0000-4000-8000-000000000001', 'reading', 'A1', 25, '{"type": "multiple_choice", "context": "My name is Ana. I am a teacher. I live in São Paulo with my family.", "prompt": "Where does Ana live?", "options": [{"text": "São Paulo", "isCorrect": true}, {"text": "Rio de Janeiro", "isCorrect": false}, {"text": "Lisbon", "isCorrect": false}]}'::jsonb),
+('aaaaaaaa-0000-4000-8000-000000000001', 'reading', 'A1', 26, '{"type": "multiple_choice", "context": "Tom has a dog. The dog is black and small. Tom walks the dog every morning.", "prompt": "What color is the dog?", "options": [{"text": "white", "isCorrect": false}, {"text": "black", "isCorrect": true}, {"text": "brown", "isCorrect": false}]}'::jsonb),
+('aaaaaaaa-0000-4000-8000-000000000001', 'reading', 'A2', 27, '{"type": "multiple_choice", "context": "Every Saturday, Maria goes to the market near her house. She buys fruit, vegetables, and sometimes flowers. She likes to cook fresh meals for her family.", "prompt": "When does Maria go to the market?", "options": [{"text": "Every day", "isCorrect": false}, {"text": "Every Saturday", "isCorrect": true}, {"text": "Every Sunday", "isCorrect": false}]}'::jsonb),
+('aaaaaaaa-0000-4000-8000-000000000001', 'reading', 'A2', 28, '{"type": "multiple_choice", "context": "The museum opens at 9 a.m. and closes at 5 p.m. It is closed on Mondays. Tickets cost $10 for adults and $5 for children.", "prompt": "How much does a ticket cost for a child?", "options": [{"text": "$10", "isCorrect": false}, {"text": "$5", "isCorrect": true}, {"text": "Free", "isCorrect": false}]}'::jsonb),
+('aaaaaaaa-0000-4000-8000-000000000001', 'reading', 'B1', 29, '{"type": "multiple_choice", "context": "Remote work has become increasingly common since the pandemic. Many employees report higher productivity, but some managers worry about team communication. Companies are now experimenting with hybrid models that combine office and home work.", "prompt": "What are some managers concerned about?", "options": [{"text": "Productivity", "isCorrect": false}, {"text": "Team communication", "isCorrect": true}, {"text": "Salaries", "isCorrect": false}]}'::jsonb),
+('aaaaaaaa-0000-4000-8000-000000000001', 'reading', 'B1', 30, '{"type": "multiple_choice", "context": "The city council announced a new recycling program starting next month. Residents will receive separate bins for paper, plastic, and organic waste. Officials hope the program will reduce landfill waste by 30% within two years.", "prompt": "What is the goal of the new program?", "options": [{"text": "Increase taxes", "isCorrect": false}, {"text": "Reduce landfill waste", "isCorrect": true}, {"text": "Build a new bin factory", "isCorrect": false}]}'::jsonb),
+('aaaaaaaa-0000-4000-8000-000000000001', 'reading', 'B2', 31, '{"type": "multiple_choice", "context": "Despite significant advances in renewable energy technology, many countries still rely heavily on fossil fuels due to existing infrastructure and economic interests. Transitioning to a fully renewable grid requires not only technological innovation but also substantial policy changes and public investment.", "prompt": "According to the passage, what is one obstacle to renewable energy adoption besides technology?", "options": [{"text": "Lack of sunlight", "isCorrect": false}, {"text": "Existing infrastructure and economic interests", "isCorrect": true}, {"text": "Public opposition to clean energy", "isCorrect": false}]}'::jsonb),
+('aaaaaaaa-0000-4000-8000-000000000001', 'reading', 'B2', 32, '{"type": "multiple_choice", "context": "The novelist''s latest work has divided critics: some praise its experimental structure, while others argue it sacrifices narrative coherence for style. Regardless, it has become a bestseller, suggesting that readers are more forgiving of unconventional storytelling than critics assume.", "prompt": "What does the passage suggest about readers'' reactions?", "options": [{"text": "They dislike experimental novels", "isCorrect": false}, {"text": "They may be more open to unconventional storytelling than critics", "isCorrect": true}, {"text": "They agree entirely with critics", "isCorrect": false}]}'::jsonb),
+('aaaaaaaa-0000-4000-8000-000000000001', 'reading', 'C1', 33, '{"type": "multiple_choice", "context": "While automation promises increased efficiency, its unchecked expansion raises profound questions about the future of labor markets. Economists remain divided: some contend that new industries will absorb displaced workers, as has historically occurred, while others warn that the pace and scale of current automation may outstrip society''s capacity to adapt.", "prompt": "What is the main point of disagreement among economists mentioned in the passage?", "options": [{"text": "Whether automation increases efficiency", "isCorrect": false}, {"text": "Whether new industries can absorb displaced workers at the current pace", "isCorrect": true}, {"text": "Whether automation should be banned", "isCorrect": false}]}'::jsonb),
+('aaaaaaaa-0000-4000-8000-000000000001', 'reading', 'C1', 34, '{"type": "multiple_choice", "context": "Critics of the policy argue that its short-term benefits are outweighed by long-term structural risks, yet proponents counter that inaction poses an even greater threat to economic stability. The debate, largely unresolved, reflects a broader tension between immediate pragmatism and long-term planning.", "prompt": "According to the passage, what do proponents of the policy believe?", "options": [{"text": "The policy has no risks", "isCorrect": false}, {"text": "Inaction is riskier than the policy itself", "isCorrect": true}, {"text": "The policy should be reversed immediately", "isCorrect": false}]}'::jsonb),
+('aaaaaaaa-0000-4000-8000-000000000001', 'reading', 'C2', 35, '{"type": "multiple_choice", "context": "The philosopher''s argument, though internally coherent, rests on premises that are themselves contestable; to accept her conclusion, one must first grant assumptions about human nature that many contemporary thinkers would reject outright. This is not to dismiss the argument''s rigor, but rather to situate it within a broader epistemological debate that remains unresolved.", "prompt": "What is the author''s overall assessment of the philosopher''s argument?", "options": [{"text": "It is flawed and should be dismissed", "isCorrect": false}, {"text": "It is logically rigorous but depends on debatable premises", "isCorrect": true}, {"text": "It is universally accepted by contemporary thinkers", "isCorrect": false}]}'::jsonb),
+('aaaaaaaa-0000-4000-8000-000000000001', 'reading', 'C2', 36, '{"type": "multiple_choice", "context": "It would be reductive to characterize the author''s body of work as merely a reaction against modernist orthodoxy; rather, her work engages critically with that tradition while simultaneously carving out a distinct aesthetic vocabulary, one that resists easy categorization within existing literary movements.", "prompt": "What does the passage suggest about the author''s relationship to modernism?", "options": [{"text": "She rejects modernism entirely", "isCorrect": false}, {"text": "She engages critically with modernism while developing her own distinct style", "isCorrect": true}, {"text": "She strictly follows modernist conventions", "isCorrect": false}]}'::jsonb);

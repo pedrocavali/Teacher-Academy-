@@ -5,6 +5,7 @@ import { createClient } from "@/lib/supabase/server";
 import { scoreSkill, overallLevel, type CefrLevel } from "@/lib/placement/scoring";
 import { isPlacementResponseCorrect, type PlacementResponse } from "@/lib/placement/grading";
 import type { AssessmentQuestionPayload } from "@/lib/placement/payload";
+import { logEvent } from "@/lib/events/log";
 
 export async function submitPlacementAttempt(
   responses: Record<string, PlacementResponse>,
@@ -105,6 +106,14 @@ export async function submitPlacementAttempt(
       { onConflict: "user_id,skill" },
     );
   }
+
+  await logEvent(supabase, {
+    userId: user.id,
+    eventType: "placement_completed",
+    entityType: "assessment",
+    entityId: assessment.id,
+    properties: { overallLevel: overall },
+  });
 
   redirect("/placement/results");
 }

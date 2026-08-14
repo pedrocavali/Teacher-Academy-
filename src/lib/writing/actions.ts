@@ -3,6 +3,7 @@
 import { createClient } from "@/lib/supabase/server";
 import { evaluateWriting } from "@/lib/ai/service";
 import type { WritingFeedback } from "@/lib/ai/provider";
+import { logEvent } from "@/lib/events/log";
 
 export type SubmitWritingResult =
   | { error: string }
@@ -67,6 +68,13 @@ export async function submitWriting(
   if (error) {
     return { error: error.message };
   }
+
+  await logEvent(supabase, {
+    userId: user.id,
+    eventType: "writing_submitted",
+    entityType: "activity",
+    entityId: activityId,
+  });
 
   return { success: true, feedback };
 }

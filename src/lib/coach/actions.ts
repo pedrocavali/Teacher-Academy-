@@ -3,6 +3,7 @@
 import { createClient } from "@/lib/supabase/server";
 import { continueCoachConversation } from "@/lib/ai/service";
 import type { CoachTurn } from "@/lib/ai/provider";
+import { logEvent } from "@/lib/events/log";
 
 // Blueprint Decision #4: bounded practice, not an open-ended chatbot.
 // App-level cap, not the model's judgment call — see continueCoachConversation.
@@ -169,6 +170,14 @@ export async function sendCoachMessage(
       .from("ai_conversations")
       .update({ status: "completed" })
       .eq("id", conversationId);
+
+    await logEvent(supabase, {
+      userId: user.id,
+      eventType: "coach_conversation_completed",
+      entityType: "activity",
+      entityId: activityId,
+      properties: { conversationId },
+    });
   }
 
   return {

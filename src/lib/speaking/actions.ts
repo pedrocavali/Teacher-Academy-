@@ -3,6 +3,7 @@
 import { createClient } from "@/lib/supabase/server";
 import { evaluateSpeaking } from "@/lib/ai/service";
 import type { SpeakingFeedback } from "@/lib/ai/provider";
+import { logEvent } from "@/lib/events/log";
 
 export type SubmitSpeakingResult =
   | { error: string }
@@ -89,6 +90,13 @@ export async function submitSpeaking(
   if (error) {
     return { error: error.message };
   }
+
+  await logEvent(supabase, {
+    userId: user.id,
+    eventType: "speaking_submitted",
+    entityType: "activity",
+    entityId: activityId,
+  });
 
   return { success: true, feedback };
 }

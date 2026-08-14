@@ -1,6 +1,7 @@
 "use server";
 
 import { createClient } from "@/lib/supabase/server";
+import { logEvent } from "@/lib/events/log";
 
 export async function completeLesson(
   lessonId: string,
@@ -23,6 +24,13 @@ export async function completeLesson(
   if (error) {
     return { error: error.message };
   }
+
+  await logEvent(supabase, {
+    userId: user.id,
+    eventType: "lesson_completed",
+    entityType: "lesson",
+    entityId: lessonId,
+  });
 
   return { success: true };
 }

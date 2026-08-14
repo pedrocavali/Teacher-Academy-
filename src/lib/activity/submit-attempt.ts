@@ -1,6 +1,7 @@
 "use server";
 
 import { createClient } from "@/lib/supabase/server";
+import { logEvent } from "@/lib/events/log";
 
 export type SubmittedResponse =
   | { type: "choice"; optionId: string }
@@ -93,6 +94,14 @@ export async function submitActivityAttempt(
     is_correct: score === maxScore,
     responses,
     completed_at: new Date().toISOString(),
+  });
+
+  await logEvent(supabase, {
+    userId: user.id,
+    eventType: "activity_completed",
+    entityType: "activity",
+    entityId: activityId,
+    properties: { score, maxScore },
   });
 
   return { success: true, score, maxScore, results };

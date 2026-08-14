@@ -1,4 +1,5 @@
 import type { SupabaseClient } from "@supabase/supabase-js";
+import { logEvent } from "@/lib/events/log";
 
 // Plain server-side helper (not a Server Action) — called directly from the
 // lesson page's own render. Only ever inserts; never touches an existing
@@ -22,6 +23,12 @@ export async function ensureLessonStarted(
       lesson_id: lessonId,
       status: "in_progress",
       started_at: new Date().toISOString(),
+    });
+    await logEvent(supabase, {
+      userId,
+      eventType: "lesson_started",
+      entityType: "lesson",
+      entityId: lessonId,
     });
   }
 }

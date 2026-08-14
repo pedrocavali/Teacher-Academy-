@@ -2,6 +2,7 @@
 
 import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
+import { logEvent } from "@/lib/events/log";
 
 export type LoginState = { error: string } | null;
 
@@ -13,13 +14,17 @@ export async function login(
   const password = formData.get("password") as string;
 
   const supabase = await createClient();
-  const { error } = await supabase.auth.signInWithPassword({
+  const { data, error } = await supabase.auth.signInWithPassword({
     email,
     password,
   });
 
   if (error) {
     return { error: error.message };
+  }
+
+  if (data.user) {
+    await logEvent(supabase, { userId: data.user.id, eventType: "login" });
   }
 
   redirect("/dashboard");

@@ -2,6 +2,7 @@
 
 import { createClient } from "@/lib/supabase/server";
 import { logEvent } from "@/lib/events/log";
+import { recordStudyActivity } from "@/lib/gamification/actions";
 
 export async function completeLesson(
   lessonId: string,
@@ -31,6 +32,13 @@ export async function completeLesson(
     entityType: "lesson",
     entityId: lessonId,
   });
+
+  const { data: lesson } = await supabase
+    .from("lessons")
+    .select("estimated_minutes")
+    .eq("id", lessonId)
+    .maybeSingle();
+  await recordStudyActivity(supabase, user.id, lesson?.estimated_minutes ?? 0);
 
   return { success: true };
 }

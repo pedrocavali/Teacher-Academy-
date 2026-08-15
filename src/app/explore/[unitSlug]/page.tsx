@@ -3,7 +3,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
-import { LessonCard } from "@/components/catalog/lesson-card";
+import { LessonPath, type PathLesson } from "@/components/catalog/lesson-path";
 import { Badge } from "@/components/ui/badge";
 import { unitCoverSrc } from "@/lib/curriculum/unit-cover";
 
@@ -43,6 +43,47 @@ export default async function UnitDetailPage(
     .eq("status", "published")
     .order("order_index", { ascending: true });
 
+  const lessonIds = (lessons ?? []).map((l) => l.id);
+
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+
+  const [{ data: progressRows }, { data: activityRows }] = await Promise.all([
+    user && lessonIds.length > 0
+      ? supabase
+          .from("lesson_progress")
+          .select("lesson_id, status")
+          .eq("user_id", user.id)
+          .in("lesson_id", lessonIds)
+      : Promise.resolve({ data: null }),
+    lessonIds.length > 0
+      ? supabase
+          .from("activities")
+          .select("lesson_id, skill")
+          .eq("status", "published")
+          .in("lesson_id", lessonIds)
+      : Promise.resolve({ data: null }),
+  ]);
+
+  const progressByLesson = new Map(
+    (progressRows ?? []).map((p) => [p.lesson_id, p.status as PathLesson["status"]]),
+  );
+  const skillsByLesson = new Map<string, Set<string>>();
+  for (const row of activityRows ?? []) {
+    const set = skillsByLesson.get(row.lesson_id) ?? new Set<string>();
+    set.add(row.skill);
+    skillsByLesson.set(row.lesson_id, set);
+  }
+
+  const pathLessons: PathLesson[] = (lessons ?? []).map((lesson) => ({
+    ...lesson,
+    status: progressByLesson.get(lesson.id) ?? "not_started",
+    otherSkills: [...(skillsByLesson.get(lesson.id) ?? [])].filter(
+      (skill) => skill !== lesson.primary_skill,
+    ),
+  }));
+
   return (
     <div className="flex flex-1 flex-col gap-8 px-6 py-12">
       <div className="flex flex-col gap-2">
@@ -66,16 +107,12 @@ export default async function UnitDetailPage(
         </div>
       </div>
 
-      {!lessons || lessons.length === 0 ? (
+      {pathLessons.length === 0 ? (
         <p className="text-sm text-muted-foreground">
           No published lessons in this unit yet.
         </p>
       ) : (
-        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
-          {lessons.map((lesson) => (
-            <LessonCard key={lesson.id} lesson={lesson} />
-          ))}
-        </div>
+        <LessonPath lessons={pathLessons} />
       )}
     </div>
   );

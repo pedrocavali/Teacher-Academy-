@@ -1,9 +1,10 @@
 import Link from "next/link";
 import { Card } from "@/components/ui/card";
-import { LevelBadge } from "@/components/ui/badge";
+import { LevelBadge, Badge } from "@/components/ui/badge";
 
 export function LessonCard({
   lesson,
+  otherSkills = [],
 }: {
   lesson: {
     slug: string;
@@ -13,6 +14,7 @@ export function LessonCard({
     primary_skill: string;
     estimated_minutes: number;
   };
+  otherSkills?: string[];
 }) {
   return (
     <Link href={`/lesson/${lesson.slug}`}>
@@ -25,6 +27,15 @@ export function LessonCard({
         </div>
         <h4 className="font-semibold tracking-tight">{lesson.title}</h4>
         <p className="text-sm text-muted-foreground">{lesson.objective}</p>
+        {otherSkills.length > 0 && (
+          <div className="mt-1 flex flex-wrap gap-1.5">
+            {otherSkills.map((skill) => (
+              <Badge key={skill} className="bg-muted capitalize text-muted-foreground">
+                {skill}
+              </Badge>
+            ))}
+          </div>
+        )}
       </Card>
     </Link>
   );

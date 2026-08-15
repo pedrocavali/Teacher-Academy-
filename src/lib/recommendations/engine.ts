@@ -13,6 +13,8 @@ export type Recommendation = {
   reasonText: string;
   title: string;
   href: string;
+  cefrLevel: string;
+  unitSlug: string | null;
 };
 
 type LessonRow = {
@@ -22,6 +24,7 @@ type LessonRow = {
   cefr_level: string;
   order_index: number;
   unit_id: string;
+  units: { slug: string }[] | null;
 };
 
 type Candidate = {
@@ -32,7 +35,7 @@ type Candidate = {
 };
 
 const MAX_RECOMMENDATIONS = 3;
-const LESSON_COLUMNS = "id, slug, title, cefr_level, order_index, unit_id";
+const LESSON_COLUMNS = "id, slug, title, cefr_level, order_index, unit_id, units(slug)";
 
 export async function getRecommendations(
   supabase: SupabaseClient,
@@ -49,7 +52,7 @@ export async function getRecommendations(
   // Rule 1: an in-progress lesson takes priority over anything new.
   const { data: inProgress } = await supabase
     .from("lesson_progress")
-    .select("started_at, lessons!inner(id, slug, title, cefr_level, order_index, unit_id, status)")
+    .select("started_at, lessons!inner(id, slug, title, cefr_level, order_index, unit_id, status, units(slug))")
     .eq("user_id", userId)
     .eq("status", "in_progress")
     .eq("lessons.status", "published")
@@ -82,7 +85,7 @@ export async function getRecommendations(
 
     const { data: skillLessons } = await supabase
       .from("lessons")
-      .select("id, slug, title, cefr_level, order_index, unit_id, primary_skill")
+      .select("id, slug, title, cefr_level, order_index, unit_id, primary_skill, units(slug)")
       .eq("status", "published")
       .eq("primary_skill", weakest.skill)
       .eq("cefr_level", weakest.cefr_level)
@@ -251,6 +254,8 @@ async function logRecommendations(
       reasonText: candidate.reasonText,
       title: candidate.lesson.title,
       href: `/lesson/${candidate.lesson.slug}`,
+      cefrLevel: candidate.lesson.cefr_level,
+      unitSlug: candidate.lesson.units?.[0]?.slug ?? null,
     });
   }
   return results;

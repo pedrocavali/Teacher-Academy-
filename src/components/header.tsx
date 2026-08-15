@@ -50,6 +50,9 @@ export async function Header() {
           <Link href="/explore" className="hover:underline">
             Explore
           </Link>
+          <Link href="/performance" className="hover:underline">
+            Performance
+          </Link>
           <form action={signOut}>
             <button type="submit" className="hover:underline">
               Sign out

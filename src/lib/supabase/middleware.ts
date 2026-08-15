@@ -46,6 +46,7 @@ export async function updateSession(request: NextRequest) {
     path.startsWith("/explore") ||
     path.startsWith("/lesson") ||
     path.startsWith("/placement") ||
+    path.startsWith("/performance") ||
     path.startsWith("/admin");
   const isAuthOnlyRoute = path === "/login" || path === "/signup";
 

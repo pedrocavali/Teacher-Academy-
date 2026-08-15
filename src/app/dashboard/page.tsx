@@ -93,9 +93,14 @@ export default async function DashboardPage() {
       </Card>
 
       <div className="flex flex-col gap-3">
-        <h2 className="text-sm font-medium uppercase tracking-wide text-muted-foreground">
-          Your progress
-        </h2>
+        <div className="flex items-center justify-between">
+          <h2 className="text-sm font-medium uppercase tracking-wide text-muted-foreground">
+            Your progress
+          </h2>
+          <Link href="/performance" className="text-xs font-medium text-primary hover:underline">
+            View full performance →
+          </Link>
+        </div>
         <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
           <Card className="flex flex-col gap-1 shadow-[var(--card-shadow)]">
             <span className="text-xs font-medium uppercase tracking-wide text-muted-foreground">
